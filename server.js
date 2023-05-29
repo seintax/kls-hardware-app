@@ -56,6 +56,8 @@ app.use('/library', library.measurement)
 const system = require('./src/control/system.controller')
 app.use('/system', system.reports)
 app.use('/system', system.account)
+const testing = require('./src/control/testing.controller')
+app.use('/testing', testing)
 
 app.all('*', (req, res) => {
     if (req.accepts('html')) {
