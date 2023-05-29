@@ -11,7 +11,8 @@ const mysql = require('mysql')
 //     queueLimit: 0
 // })
 
-var my = mysql.createPool(process.env.DATABASE_URL)
+// var my = mysql.createPool(process.env.DATABASE_URL)
+var my = mysql.createPool('mysql://zksmeae2o164wvbj6e6p:pscale_pw_jTHw0s6fYS30TwslDlAQpTCiXaFAGljcgagnxKU0wSe@aws.connect.psdb.cloud/app-jbs-hpos?ssl={"rejectUnauthorized":true}')
 
 my.getConnection((err, con) => {
     if (err) {
