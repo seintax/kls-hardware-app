@@ -3,7 +3,7 @@ const dispensing = {
     fields: {
         id: 'sale_id',
         code: 'sale_trans',
-        index: 'sale_index',
+        position: 'sale_index',
         time: 'sale_time',
         item: 'sale_item',
         product: 'sale_product',
@@ -19,7 +19,16 @@ const dispensing = {
         taxrated: 'sale_taxrated',
         toreturn: 'sale_toreturn',
         returned: 'sale_returned',
-    }
+    },
+    joined: {
+        name: "prod_name",
+        details: "prod_details",
+        unit: "prod_unit",
+        category: "prod_category",
+        vatable: "invt_vatable",
+        isloose: "invt_isloose",
+    },
+    conditional: 'LEFT JOIN pos_stock_masterlist ON prod_id=sale_product LEFT JOIN pos_stock_inventory ON invt_id=sale_item',
 }
 
 module.exports = {

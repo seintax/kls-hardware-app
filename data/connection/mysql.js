@@ -1,17 +1,17 @@
 const mysql = require('mysql')
 
-// var my = mysql.createPool({
-//     host: process.env.MY_SERVER,
-//     user: process.env.MY_USER,
-//     password: process.env.MY_PASSWORD,
-//     database: process.env.MY_DATABASE,
-//     waitForConnections: true,
-//     multipleStatements: true,
-//     connectionLimit: 10,
-//     queueLimit: 0
-// })
+var my = mysql.createPool({
+    host: process.env.MY_SERVER,
+    user: process.env.MY_USER,
+    password: process.env.MY_PASSWORD,
+    database: process.env.MY_DATABASE,
+    waitForConnections: true,
+    multipleStatements: true,
+    connectionLimit: 10,
+    queueLimit: 0
+})
 
-var my = mysql.createPool(process.env.DATABASE_URL)
+// var my = mysql.createPool(process.env.DATABASE_URL)
 
 my.getConnection((err, con) => {
     if (err) {

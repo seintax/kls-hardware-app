@@ -34,6 +34,11 @@ const custom = require('./src/control/custom.controller')
 app.use('/custom', custom.transaction)
 app.use('/custom', custom.dispensing)
 app.use('/custom', custom.payment)
+app.use('/custom', custom.customer)
+app.use('/custom', custom.credits)
+app.use('/custom', custom.schedule)
+app.use('/custom', custom.request)
+app.use('/custom', custom.returned)
 // FEATURE
 const feature = require('./src/control/feature.controller')
 app.use('/feature', feature.supplier)
@@ -49,6 +54,8 @@ app.use('/library', library.discount)
 app.use('/library', library.measurement)
 // SYSTEM
 const system = require('./src/control/system.controller')
+app.use('/system', system.reports)
+app.use('/system', system.account)
 
 app.all('*', (req, res) => {
     if (req.accepts('html')) {

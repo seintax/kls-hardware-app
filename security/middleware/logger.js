@@ -22,7 +22,6 @@ const logger = (req, res, next) => {
     if (req.headers.origin && !req.headers.origin?.includes("localhost")) {
         logEvent(`${req.method}\t${req.url}\t${req.headers.origin}`, 'reqLog.log')
     }
-    // console.log(`${req.method} request from '${req.headers.origin || `client:${req.headers.host}`}' for resource path '..rootserver${req.path}'`)
     next()
 }
 

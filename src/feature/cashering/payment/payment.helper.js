@@ -3,12 +3,14 @@ const payment = {
     fields: {
         id: 'paym_id',
         code: 'paym_trans',
+        time: 'paym_time',
         type: 'paym_type',
         method: 'paym_method',
         amount: 'paym_amount',
         refcode: 'paym_refcode',
         refdate: 'paym_refdate',
         refstat: 'paym_refstat',
+        shift: 'paym_shift',
     }
 }
 

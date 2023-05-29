@@ -19,8 +19,6 @@ const createRecord = async (param, callback) => {
 const updateRecord = async (param, callback) => {
     let helper = query.updateBuilder(param, table.supplier)
     let sql = query.builder.set(table.supplier.name, helper.update.fields, table.supplier.fields.id)
-    console.log("sql", sql)
-    console.log("helper", helper.parameters)
     await cache.modificyCache(sql, param.id)
     my.query(sql, helper.parameters, async (err, ans) => {
         if (err) return callback(err)

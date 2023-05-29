@@ -83,4 +83,28 @@ router.post('/cashering/dispensing/batch', async (req, res) => {
     })
 })
 
+router.get('/cashering/dispensing/transaction', async (req, res) => {
+    await service.transactionRecord(req.query, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
+router.patch('/cashering/dispensing/request', async (req, res) => {
+    await service.requestRecord(req.body, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
 module.exports = router

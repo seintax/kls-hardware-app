@@ -70,7 +70,6 @@ const searchRecord = async (param, callback) => {
 
 const balanceRecord = async (param, callback) => {
     let sql = table.delivery.balanceUpdate
-    await cache.modificyCache(sql, param.id)
     my.query(sql, [param.id], async (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)

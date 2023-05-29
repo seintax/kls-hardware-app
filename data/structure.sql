@@ -46,7 +46,7 @@ CREATE TABLE sys_account (
     acct_duration    timestamp
 );
 
-INSERT INTO sys_account (acct_fullname,acct_username,acct_password) VALUES ('DEVELOPER','SEINTAX','seintax');
+INSERT INTO sys_account (acct_fullname,acct_username,acct_password) VALUES ('DEVELOPER','SEINTAX','$2a$10$tSnuDwpZctfa5AvyRzczJu.NAFMnXXQnedJejxZSn1Hqp8XVV2fAW');
 
 CREATE TABLE sys_user (
     user_id          int auto_increment primary key,
@@ -54,7 +54,6 @@ CREATE TABLE sys_user (
     user_lname       varchar(45),
     user_fname       varchar(45),
     user_mname       varchar(45),
-    user_cname       varchar(99),
     user_gender      varchar(3),
     user_contact     varchar(30),
     user_address     text,
@@ -106,7 +105,9 @@ CREATE TABLE pos_archive_customer (
     cust_address     varchar(150),
     cust_contact     varchar(30),
     cust_email       varchar(99),
-    cust_credit      decimal(30,2),
+    cust_count       int DEFAULT 0,
+    cust_value       decimal(30,2) DEFAULT 0,
+    cust_waive       decimal(30,2) DEFAULT 0,
     cust_status      varchar(1) DEFAULT "A"
 );
 
@@ -252,7 +253,7 @@ CREATE TABLE pos_sales_dispensing (
     sale_price       decimal(30,2),
     sale_vat         decimal(30,2),
     sale_total       decimal(30,2),
-    sale_less        decimal(30,2),
+    sale_less        decimal(30,2) DEFAULT 0,
     sale_net         decimal(30,2),
     sale_discount    decimal(5,2) DEFAULT 0,
     sale_taxrated    decimal(5,2) DEFAULT 0,
@@ -272,33 +273,35 @@ CREATE TABLE pos_sales_credit (
     cred_tended      decimal(30,2),
     cred_change      decimal(30,2),
     cred_waived      decimal(30,2),
-    cred_method      varchar(30),
+    cred_status      varchar(30) DEFAULT "ON-GOING",
     cred_settledon   timestamp
 );
 
 CREATE TABLE pos_payment_collection (
     paym_id          int auto_increment primary key,
     paym_trans       varchar(99),
+    paym_time        timestamp DEFAULT now(),
     paym_type        varchar(20) DEFAULT 'SALES',
     paym_method      varchar(30),
     paym_amount      decimal(30,2),
     paym_refcode     varchar(50),
     paym_refdate     date,
-    paym_refstat     varchar(30) DEFAULT 'NOT APPLICABLE'
+    paym_refstat     varchar(30) DEFAULT 'NOT APPLICABLE',
+    paym_shift       int
 );
 
 CREATE TABLE pos_return_transaction (
     rtrn_id          int auto_increment primary key,
     rtrn_trans       varchar(99),
     rtrn_time        timestamp DEFAULT now(),
-    rtrn_p_net       decimal(30,2),
-    rtrn_p_less      decimal(30,2),
     rtrn_p_vat       decimal(30,2),
     rtrn_p_total     decimal(30,2),
-    rtrn_r_net       decimal(30,2),
-    rtrn_r_less      decimal(30,2),
+    rtrn_p_less      decimal(30,2),
+    rtrn_p_net       decimal(30,2),
     rtrn_r_vat       decimal(30,2),
     rtrn_r_total     decimal(30,2),
+    rtrn_r_less      decimal(30,2),
+    rtrn_r_net       decimal(30,2),
     rtrn_discount    decimal(5,2) DEFAULT 0,
     rtrn_requestedby int,
     rtrn_requestedon timestamp DEFAULT now(),
@@ -316,10 +319,10 @@ CREATE TABLE pos_return_dispensing (
     rsal_conv        int,
     rsal_qty         decimal(10,2),
     rsal_price       decimal(30,2),
-    rsal_net         decimal(30,2),
-    rsal_less        decimal(30,2),
     rsal_vat         decimal(30,2),
     rsal_total       decimal(30,2),
+    rsal_less        decimal(30,2),
+    rsal_net         decimal(30,2),
     rsal_discount    decimal(5,2) DEFAULT 0,
     rsal_taxrated    decimal(5,2) DEFAULT 0
 );
@@ -327,11 +330,11 @@ CREATE TABLE pos_return_dispensing (
 CREATE TABLE pos_shift_schedule (
     shft_id          int auto_increment primary key,
     shft_account     int,
-    shft_start       timestamp,
-    shft_beg_cash    decimal(30,2),
+    shft_start       timestamp DEFAULT now(),
+    shft_beg_cash    decimal(30,2) DEFAULT 0,
     shft_status      varchar(20) DEFAULT 'START',
     shft_close       timestamp,
-    shft_end_cash    decimal(30,2),
+    shft_end_cash    decimal(30,2) DEFAULT 0,
     shft_total_hrs   varchar(10)
 );
 

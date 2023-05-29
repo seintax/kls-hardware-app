@@ -2,10 +2,6 @@ const inventory = {
     name: 'pos_stock_inventory',
     fields: {
         id: 'invt_id',
-        name: "prod_name",
-        details: "prod_details",
-        unit: "prod_unit",
-        category: "prod_category",
         product: 'invt_product',
         sku: 'invt_sku',
         brand: 'invt_brand',
@@ -26,9 +22,17 @@ const inventory = {
         acquisition: 'invt_acquisition',
         status: 'invt_status',
     },
+    joined: {
+        name: "prod_name",
+        details: "prod_details",
+        unit: "prod_unit",
+        category: "prod_category",
+    },
     conditional: 'LEFT JOIN pos_stock_masterlist ON prod_id=invt_product',
     balanceAdded: 'UPDATE pos_stock_inventory SET invt_stocks=(invt_stocks + @qty),invt_trni_total=(invt_trni_total - @qty) WHERE invt_id = ?',
     balanceMinus: 'UPDATE pos_stock_inventory SET invt_stocks=(invt_stocks - @qty),invt_trni_total=(invt_trni_total + @qty) WHERE invt_id = ?',
+    returnAdded: 'UPDATE pos_stock_inventory SET invt_stocks=(invt_stocks + @qty) WHERE invt_id = ?',
+    returnMinus: 'UPDATE pos_stock_inventory SET invt_stocks=(invt_stocks - @qty) WHERE invt_id = ?',
 }
 
 module.exports = {

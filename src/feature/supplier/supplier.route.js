@@ -48,7 +48,6 @@ router.route('/supplier')
     })
 
 router.get('/supplier/element', async (req, res) => {
-    console.log(req.query)
     await service.uniqueRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err

@@ -36,7 +36,8 @@ const deleteRecord = async (param, callback) => {
 }
 
 const selectRecord = async (param, callback) => {
-    let { name, id } = table.inventory.fields
+    let { id } = table.inventory.fields
+    let { name } = table.inventory.joined
     let options = {
         parameter: [param.search?.Contains()],
         filter: [name?.Like()],
@@ -87,13 +88,46 @@ const transferRecord = async (param, callback) => {
             table.inventory.balanceAdded.replaceAll("@qty", param.qty) :
             table.inventory.balanceMinus.replaceAll("@qty", param.qty)
     )
-    await cache.modificyCache(sql, param.id)
-    console.log(param)
-    console.log(sql)
     my.query(sql, [param.id], async (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
     })
+}
+
+const batchRecord = async (param, callback) => {
+    let batch = await Promise.all(param?.cart?.map(async item => {
+        let retrieve = await new Promise((resolve, reject) => {
+            let sql = (
+                param.op === "add" ?
+                    table.inventory.balanceAdded.replaceAll("@qty", item.purchase) :
+                    table.inventory.balanceMinus.replaceAll("@qty", item.purchase)
+            )
+            my.query(sql, [item.item], async (err, ans) => {
+                if (err) return reject(err)
+                resolve({ item: item.item, response: ans })
+            })
+        })
+        return retrieve
+    }))
+    return callback(null, batch)
+}
+
+const returnRecord = async (param, callback) => {
+    let batch = await Promise.all(param?.cart?.map(async item => {
+        let retrieve = await new Promise((resolve, reject) => {
+            let sql = (
+                param.op === "add" ?
+                    table.inventory.returnAdded.replaceAll("@qty", item.toreturn) :
+                    table.inventory.returnMinus.replaceAll("@qty", item.toreturn)
+            )
+            my.query(sql, [item.item], async (err, ans) => {
+                if (err) return reject(err)
+                resolve({ item: item.item, response: ans })
+            })
+        })
+        return retrieve
+    }))
+    return callback(null, batch)
 }
 
 module.exports = {
@@ -104,5 +138,7 @@ module.exports = {
     uniqueRecord,
     searchRecord,
     inventoryRecord,
-    transferRecord
+    transferRecord,
+    batchRecord,
+    returnRecord
 }

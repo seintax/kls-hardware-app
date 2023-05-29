@@ -2,12 +2,12 @@ const mysql = require('mysql')
 const my = require('../../../../data/connection/mysql')
 const cache = require('../../../../data/connection/cache')
 const query = require('../../../../data/connection/query')
-const table = require('./dispensing.helper')
+const table = require('./returned.helper')
 require("../../../utilities/query.prototypes")
 
 const createRecord = async (param, callback) => {
-    let helper = query.createBuilder(param, table.dispensing)
-    let sql = query.builder.add(table.dispensing.name, helper.create.fields, helper.create.values)
+    let helper = query.createBuilder(param, table.returned)
+    let sql = query.builder.add(table.returned.name, helper.create.fields, helper.create.values)
     my.query(sql, helper.parameters, async (err, ans) => {
         if (err) return callback(err)
         const res = ans
@@ -17,8 +17,8 @@ const createRecord = async (param, callback) => {
 }
 
 const updateRecord = async (param, callback) => {
-    let helper = query.updateBuilder(param, table.dispensing)
-    let sql = query.builder.set(table.dispensing.name, helper.update.fields, table.dispensing.fields.id)
+    let helper = query.updateBuilder(param, table.returned)
+    let sql = query.builder.set(table.returned.name, helper.update.fields, table.returned.fields.id)
     await cache.modificyCache(sql, param.id)
     my.query(sql, helper.parameters, async (err, ans) => {
         if (err) return callback(err)
@@ -27,7 +27,7 @@ const updateRecord = async (param, callback) => {
 }
 
 const deleteRecord = async (param, callback) => {
-    let sql = query.builder.del(table.dispensing.name, table.dispensing.fields.id)
+    let sql = query.builder.del(table.returned.name, table.returned.fields.id)
     await cache.modificyCache(sql, param.id)
     my.query(sql, [param.id], async (err, ans) => {
         if (err) return callback(err)
@@ -36,13 +36,13 @@ const deleteRecord = async (param, callback) => {
 }
 
 const selectRecord = async (param, callback) => {
-    let { name, id } = table.dispensing.fields
+    let { name, id } = table.returned.fields
     let options = {
         parameter: [param.search?.Contains()],
         filter: [name?.Like()],
         order: [id?.Asc()]
     }
-    let sql = query.builder.rec(table.dispensing, options.filter, options.order)
+    let sql = query.builder.rec(table.returned, options.filter, options.order)
     my.query(sql, options.parameter, (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
@@ -50,7 +50,7 @@ const selectRecord = async (param, callback) => {
 }
 
 const uniqueRecord = async (param, callback) => {
-    let sql = query.builder.get(table.dispensing, table.dispensing.fields.id)
+    let sql = query.builder.get(table.returned, table.returned.fields.id)
     my.query(sql, [param.id], (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
@@ -58,9 +58,9 @@ const uniqueRecord = async (param, callback) => {
 }
 
 const searchRecord = async (param, callback) => {
-    let { id } = table.dispensing.fields
-    let helper = query.searchBuilder(param.search, table.dispensing)
-    let sql = query.builder.src(table.dispensing, helper.filters, [id?.Asc()])
+    let { id } = table.returned.fields
+    let helper = query.searchBuilder(param.search, table.returned)
+    let sql = query.builder.src(table.returned, helper.filters, [id?.Asc()])
     my.query(sql, helper.parameters, (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
@@ -70,37 +70,8 @@ const searchRecord = async (param, callback) => {
 const batchRecord = async (param, callback) => {
     let batch = await Promise.all(param?.cart?.map(async item => {
         let retrieve = await new Promise((resolve, reject) => {
-            let helper = query.createBuilder(item, table.dispensing)
-            let sql = query.builder.add(table.dispensing.name, helper.create.fields, helper.create.values)
-            my.query(sql, helper.parameters, async (err, ans) => {
-                if (err) return reject(err)
-                resolve({ item: item.item, response: ans })
-            })
-        })
-        return retrieve
-    }))
-    return callback(null, batch)
-}
-
-const transactionRecord = async (param, callback) => {
-    let { code, id } = table.dispensing.fields
-    let options = {
-        parameter: [param.code?.Exact()],
-        filter: [code?.Is()],
-        order: [id?.Asc()]
-    }
-    let sql = query.builder.rec(table.dispensing, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
-        if (err) return callback(err)
-        return callback(null, ans)
-    })
-}
-
-const requestRecord = async (param, callback) => {
-    let batch = await Promise.all(param?.cart?.map(async item => {
-        let retrieve = await new Promise((resolve, reject) => {
-            let helper = query.updateBuilder(item, table.dispensing)
-            let sql = query.builder.set(table.dispensing.name, helper.update.fields, table.dispensing.fields.id)
+            let helper = query.createBuilder(item, table.returned)
+            let sql = query.builder.add(table.returned.name, helper.create.fields, helper.create.values)
             my.query(sql, helper.parameters, async (err, ans) => {
                 if (err) return reject(err)
                 resolve({ item: item.item, response: ans })
@@ -118,7 +89,5 @@ module.exports = {
     selectRecord,
     uniqueRecord,
     searchRecord,
-    batchRecord,
-    transactionRecord,
-    requestRecord
+    batchRecord
 }

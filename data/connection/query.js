@@ -52,10 +52,15 @@ const searchBuilder = (parameter, table) => {
     }
 }
 
-const alias = (fields) => {
+const alias = (table) => {
     const names = []
-    for (const prop in fields) {
-        names.push(`${fields[prop]} AS ${prop}`)
+    for (const prop in table.fields) {
+        names.push(`${table.fields[prop]} AS ${prop}`)
+    }
+    if (table?.joined) {
+        for (const prop in table.joined) {
+            names.push(`${table.joined[prop]} AS ${prop}`)
+        }
     }
     return names.join(", ")
 }
@@ -78,19 +83,23 @@ const del = (name, id) => {
 // query builder for select
 const rec = (table, filter, order, limit) => {
     let condition = table?.conditional ? ` ${table?.conditional}` : ""
-    return `SELECT ${alias(table.fields)} FROM ${table.name}${condition} WHERE ${filter.join(" AND ")} ORDER BY ${order.join(", ")}${limit ? ` LIMIT ${limit}` : ""}`
+    return `SELECT ${alias(table)} FROM ${table.name}${condition} WHERE ${filter.join(" AND ")} ORDER BY ${order.join(", ")}${limit ? ` LIMIT ${limit}` : ""}`
 }
 
 // query builder for select
 const src = (table, filter, order) => {
     let condition = table?.conditional ? ` ${table?.conditional}` : ""
-    return `SELECT ${alias(table.fields)} FROM ${table.name}${condition} WHERE ${filter.join(" OR ")} ORDER BY ${order.join(", ")}`
+    return `SELECT ${alias(table)} FROM ${table.name}${condition} WHERE ${filter.join(" OR ")} ORDER BY ${order.join(", ")}`
 }
 
 // query builder for single
 const get = (table, id) => {
     let condition = table?.conditional ? ` ${table?.conditional}` : ""
-    return `SELECT ${alias(table.fields)} FROM ${table.name}${condition} WHERE ${id}=?`
+    return `SELECT ${alias(table)} FROM ${table.name}${condition} WHERE ${id}=?`
+}
+
+const optional = (options) => {
+    return `(${options?.join(" OR ")})`
 }
 
 const builder = {
@@ -106,5 +115,6 @@ module.exports = {
     createBuilder,
     updateBuilder,
     searchBuilder,
-    builder
+    optional,
+    builder,
 }

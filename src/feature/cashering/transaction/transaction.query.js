@@ -9,7 +9,6 @@ const createRecord = async (param, callback) => {
     let helper = query.createBuilder(param, table.transaction)
     let sql = query.builder.add(table.transaction.name, helper.create.fields, helper.create.values)
     my.query(sql, helper.parameters, async (err, ans) => {
-        console.log(err)
         if (err) return callback(err)
         await cache.creationCache(sql, ans['insertId'])
         return callback(null, { id: ans['insertId'] })
@@ -20,8 +19,6 @@ const updateRecord = async (param, callback) => {
     let helper = query.updateBuilder(param, table.transaction)
     let sql = query.builder.set(table.transaction.name, helper.update.fields, table.transaction.fields.id)
     await cache.modificyCache(sql, param.id)
-    console.log(sql)
-    console.log(helper.parameters)
     my.query(sql, helper.parameters, async (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
@@ -91,6 +88,37 @@ const readyRecord = async (param, callback) => {
     })
 }
 
+const loggedRecord = async (param, callback) => {
+    let { date, shift, code, ordno, id } = table.transaction.fields
+    let options = {
+        parameter: [param.date?.Exact(), param.shift?.Exact(), param.code?.Contains(), param.code?.Contains()],
+        filter: [date?.Is(), shift?.Is(), query.optional([
+            code?.Like(),
+            ordno?.Like(),
+        ])],
+        order: [id?.Asc()]
+    }
+    let sql = query.builder.rec(table.transaction, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
+const codeRecord = async (param, callback) => {
+    let { code, id } = table.transaction.fields
+    let options = {
+        parameter: [param.code?.Exact()],
+        filter: [code?.Like()],
+        order: [id?.Asc()]
+    }
+    let sql = query.builder.rec(table.transaction, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 module.exports = {
     createRecord,
     updateRecord,
@@ -99,5 +127,7 @@ module.exports = {
     uniqueRecord,
     searchRecord,
     shiftRecord,
-    readyRecord
+    readyRecord,
+    loggedRecord,
+    codeRecord
 }
