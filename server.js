@@ -39,6 +39,9 @@ app.use('/custom', custom.credits)
 app.use('/custom', custom.schedule)
 app.use('/custom', custom.request)
 app.use('/custom', custom.returned)
+app.use('/custom', custom.reimburse)
+app.use('/custom', custom.remittance)
+app.use('/custom', custom.collection)
 // FEATURE
 const feature = require('./src/control/feature.controller')
 app.use('/feature', feature.supplier)
@@ -58,6 +61,8 @@ app.use('/system', system.reports)
 app.use('/system', system.account)
 const testing = require('./src/control/testing.controller')
 app.use('/testing', testing)
+// const migration = require('./src/control/migrate.controller')
+// app.use('/migration', migration)
 
 app.all('*', (req, res) => {
     if (req.accepts('html')) {
