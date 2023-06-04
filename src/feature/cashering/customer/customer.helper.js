@@ -11,7 +11,7 @@ const customer = {
         waive: 'cust_waive',
         status: 'cust_status',
     },
-    balanceUpdate: 'UPDATE pos_archive_customer SET cust_count=(SELECT COUNT(*) FROM pos_sales_credit WHERE cred_creditor=cust_id),cust_value=(SELECT SUM(cred_balance) FROM pos_sales_credit WHERE cred_creditor=cust_id),cust_waive=(SELECT SUM(cred_waived) FROM pos_sales_credit WHERE cred_creditor=cust_id) WHERE cust_id=?'
+    balanceUpdate: `UPDATE pos_archive_customer SET cust_count=(SELECT COUNT(*) FROM pos_sales_credit WHERE cred_creditor=cust_id AND cred_status='ON-GOING'),cust_value=(SELECT SUM(cred_balance) FROM pos_sales_credit WHERE cred_creditor=cust_id AND cred_status='ON-GOING'),cust_waive=(SELECT SUM(cred_waived) FROM pos_sales_credit WHERE cred_creditor=cust_id AND cred_status<>'ON-GOING') WHERE cust_id=?`
 }
 
 module.exports = {

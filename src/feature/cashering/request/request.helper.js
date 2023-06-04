@@ -13,6 +13,7 @@ const request = {
         rtrnless: 'rtrn_r_less',
         rtrnnet: 'rtrn_r_net',
         discount: 'rtrn_discount',
+        shift: 'rtrn_shift',
         requestedby: 'rtrn_requestedby',
         requestedon: 'rtrn_requestedon',
         authorizeby: 'rtrn_authorizeby',

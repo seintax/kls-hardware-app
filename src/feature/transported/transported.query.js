@@ -68,11 +68,12 @@ const searchRecord = async (param, callback) => {
 }
 
 const inventoryRecord = async (param, callback) => {
-    let { reference, id } = table.transported.fields
+    let { reference } = table.transported.fields
+    let { name } = table.transported.joined
     let options = {
         parameter: [param.id],
         filter: [reference?.Is()],
-        order: [id?.Asc()]
+        order: [name?.Asc()]
     }
     let sql = query.builder.rec(table.transported, options.filter, options.order)
     my.query(sql, options.parameter, (err, ans) => {

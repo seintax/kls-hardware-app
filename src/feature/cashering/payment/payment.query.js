@@ -82,6 +82,37 @@ const batchRecord = async (param, callback) => {
     return callback(null, batch)
 }
 
+const transactionRecord = async (param, callback) => {
+    let { code, id } = table.payment.fields
+    let options = {
+        parameter: [param.code?.Contains()],
+        filter: [code?.Like()],
+        order: [id?.Asc()]
+    }
+    let sql = query.builder.rec(table.payment, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
+const returnRecord = async (param, callback) => {
+    let batch = await Promise.all(param?.payments?.map(async item => {
+        let retrieve = await new Promise((resolve, reject) => {
+            let helper = query.updateBuilder(item, table.payment)
+            let sql = query.builder.set(table.payment.name, helper.update.fields, table.payment.fields.id)
+            // resolve({ sql: sql, })
+            my.query(sql, helper.parameters, async (err, ans) => {
+                if (err) return reject(err)
+                resolve({ item: item.item, response: ans })
+            })
+        })
+        return retrieve
+    }))
+    console.log(batch)
+    return callback(null, batch)
+}
+
 module.exports = {
     createRecord,
     updateRecord,
@@ -89,5 +120,7 @@ module.exports = {
     selectRecord,
     uniqueRecord,
     searchRecord,
-    batchRecord
+    batchRecord,
+    transactionRecord,
+    returnRecord,
 }

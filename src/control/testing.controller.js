@@ -1,6 +1,7 @@
 const router = require('express').Router()
 
 router.get('/test', async (req, res) => {
+    console.log(req.query)
     return res.status(200).json({
         success: true,
         message: "You have a successfull api call.",

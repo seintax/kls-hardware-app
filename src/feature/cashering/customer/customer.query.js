@@ -58,9 +58,9 @@ const uniqueRecord = async (param, callback) => {
 }
 
 const searchRecord = async (param, callback) => {
-    let { id } = table.customer.fields
+    let { name } = table.customer.fields
     let helper = query.searchBuilder(param.search, table.customer)
-    let sql = query.builder.src(table.customer, helper.filters, [id?.Asc()])
+    let sql = query.builder.src(table.customer, helper.filters, [name?.Asc()])
     my.query(sql, helper.parameters, (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
@@ -69,6 +69,8 @@ const searchRecord = async (param, callback) => {
 
 const balanceRecord = async (param, callback) => {
     let sql = table.customer.balanceUpdate
+    console.log(sql)
+    console.log(param)
     my.query(sql, [param.id], async (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)

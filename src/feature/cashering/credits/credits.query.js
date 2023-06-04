@@ -36,10 +36,10 @@ const deleteRecord = async (param, callback) => {
 }
 
 const selectRecord = async (param, callback) => {
-    let { name, id } = table.credits.fields
+    let { customer, id } = table.credits.fields
     let options = {
         parameter: [param.search?.Contains()],
-        filter: [name?.Like()],
+        filter: [customer?.Like()],
         order: [id?.Asc()]
     }
     let sql = query.builder.rec(table.credits, options.filter, options.order)
@@ -67,11 +67,26 @@ const searchRecord = async (param, callback) => {
     })
 }
 
+const ongoingRecord = async (param, callback) => {
+    let { customer, status, id } = table.credits.fields
+    let options = {
+        parameter: [param.customer?.Exact(), "ON-GOING"],
+        filter: [customer?.Is(), status?.Is()],
+        order: [id?.Asc()]
+    }
+    let sql = query.builder.rec(table.credits, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 module.exports = {
     createRecord,
     updateRecord,
     deleteRecord,
     selectRecord,
     uniqueRecord,
-    searchRecord
+    searchRecord,
+    ongoingRecord
 }

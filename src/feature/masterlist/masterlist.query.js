@@ -58,9 +58,9 @@ const uniqueRecord = async (param, callback) => {
 }
 
 const searchRecord = async (param, callback) => {
-    let { id } = table.masterlist.fields
+    let { name } = table.masterlist.fields
     let helper = query.searchBuilder(param.search, table.masterlist)
-    let sql = query.builder.src(table.masterlist, helper.filters, [id?.Asc()])
+    let sql = query.builder.src(table.masterlist, helper.filters, [name?.Asc()])
     my.query(sql, helper.parameters, (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
