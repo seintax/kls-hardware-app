@@ -59,21 +59,37 @@ const uniqueRecord = async (param, callback) => {
 }
 
 const searchRecord = async (param, callback) => {
-    let { id } = table.inventory.fields
+    let { name } = table.inventory.joined
     let helper = query.searchBuilder(param.search, table.inventory)
-    let sql = query.builder.src(table.inventory, helper.filters, [id?.Asc()])
+    let sql = query.builder.src(table.inventory, helper.filters, [name?.Asc()])
     my.query(sql, helper.parameters, (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
     })
 }
 
+const availableRecord = async (param, callback) => {
+    let { id, stocks } = table.inventory.fields
+    let { name } = table.inventory.joined
+    let options = {
+        parameter: [param.search?.Contains(), "0"],
+        filter: [name?.Like(), stocks?.Greater()],
+        order: [id?.Asc()]
+    }
+    let sql = query.builder.rec(table.inventory, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 const inventoryRecord = async (param, callback) => {
-    let { reference, id } = table.inventory.fields
+    let { reference } = table.inventory.fields
+    let { name } = table.inventory.joined
     let options = {
         parameter: [param.id],
         filter: [reference?.Is()],
-        order: [id?.Asc()]
+        order: [name?.Asc()]
     }
     let sql = query.builder.rec(table.inventory, options.filter, options.order)
     my.query(sql, options.parameter, (err, ans) => {
@@ -137,6 +153,7 @@ module.exports = {
     selectRecord,
     uniqueRecord,
     searchRecord,
+    availableRecord,
     inventoryRecord,
     transferRecord,
     batchRecord,

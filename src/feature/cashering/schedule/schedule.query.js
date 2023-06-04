@@ -75,6 +75,20 @@ const balanceRecord = async (param, callback) => {
     })
 }
 
+const startRecord = async (param, callback) => {
+    let { account, status, id } = table.schedule.fields
+    let options = {
+        parameter: [param.id?.Exact(), "START"],
+        filter: [account?.Is(), status?.Is()],
+        order: [id?.Asc()]
+    }
+    let sql = query.builder.rec(table.schedule, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 module.exports = {
     createRecord,
     updateRecord,
@@ -82,5 +96,6 @@ module.exports = {
     selectRecord,
     uniqueRecord,
     searchRecord,
-    balanceRecord
+    balanceRecord,
+    startRecord
 }

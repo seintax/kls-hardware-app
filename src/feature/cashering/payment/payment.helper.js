@@ -10,6 +10,7 @@ const payment = {
         refcode: 'paym_refcode',
         refdate: 'paym_refdate',
         refstat: 'paym_refstat',
+        reimburse: 'paym_reimburse',
         shift: 'paym_shift',
     }
 }

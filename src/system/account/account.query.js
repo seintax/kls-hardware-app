@@ -44,7 +44,12 @@ const createRecord = async (param, callback) => {
 }
 
 const updateRecord = async (param, callback) => {
-    let helper = query.updateBuilder(param, table.account)
+    let hashedpass = param.pass
+    let newparam = {
+        ...param,
+        pass: decryptToken(hashedpass)
+    }
+    let helper = query.updateBuilder(newparam, table.account)
     let sql = query.builder.set(table.account.name, helper.update.fields, table.account.fields.id)
     await cache.modificyCache(sql, param.id)
     my.query(sql, helper.parameters, async (err, ans) => {

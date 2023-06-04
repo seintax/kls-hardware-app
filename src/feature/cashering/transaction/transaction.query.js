@@ -89,14 +89,15 @@ const readyRecord = async (param, callback) => {
 }
 
 const loggedRecord = async (param, callback) => {
-    let { date, shift, code, ordno, id } = table.transaction.fields
+    let { date, code, ordno, id } = table.transaction.fields
+    let { account } = table.transaction.joined
     let options = {
-        parameter: [param.date?.Exact(), param.shift?.Exact(), param.code?.Contains(), param.code?.Contains()],
-        filter: [date?.Is(), shift?.Is(), query.optional([
+        parameter: [param.datefr?.Exact(), param.dateto?.Exact(), param.account?.Exact(), param.code?.Contains(), param.code?.Contains()],
+        filter: [date?.Between(), account?.Is(), query.optional([
             code?.Like(),
             ordno?.Like(),
         ])],
-        order: [id?.Asc()]
+        order: [code?.Desc()]
     }
     let sql = query.builder.rec(table.transaction, options.filter, options.order)
     my.query(sql, options.parameter, (err, ans) => {

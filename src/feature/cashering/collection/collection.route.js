@@ -1,7 +1,7 @@
 const router = require('express').Router()
-const service = require('./supplier.query')
+const service = require('./collection.query')
 
-router.route('/supplier')
+router.route('/cashering/collection')
     .get(async (req, res) => {
         await service.selectRecord(req.query, (err, ans) => {
             if (err) return res.status(200).json({
@@ -47,7 +47,7 @@ router.route('/supplier')
         })
     })
 
-router.get('/supplier/element', async (req, res) => {
+router.get('/cashering/collection/element', async (req, res) => {
     await service.uniqueRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err
@@ -59,7 +59,7 @@ router.get('/supplier/element', async (req, res) => {
     })
 })
 
-router.get('/supplier/search', async (req, res) => {
+router.get('/cashering/collection/search', async (req, res) => {
     await service.searchRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err

@@ -7,6 +7,7 @@ const returned = {
         item: 'rsal_item',
         product: 'rsal_product',
         conv: 'rsal_conv',
+        request: 'rsal_request',
         qty: 'rsal_qty',
         price: 'rsal_price',
         vat: 'rsal_vat',

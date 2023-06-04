@@ -23,6 +23,21 @@ String.prototype.Is = function () {
     return `${base} = ?`
 }
 
+String.prototype.Between = function () {
+    let base = (this === undefined ? "" : this.toString())
+    return `(${base} BETWEEN ? AND ?)`
+}
+
+String.prototype.Greater = function () {
+    let base = (this === undefined ? "" : this.toString())
+    return `${base} > ?`
+}
+
+String.prototype.Lesser = function () {
+    let base = (this === undefined ? "" : this.toString())
+    return `${base} < ?`
+}
+
 String.prototype.IsNot = function () {
     let base = (this === undefined ? "" : this.toString())
     return `${base} <> ?`

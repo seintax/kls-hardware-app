@@ -6,6 +6,9 @@ const credits = require('../feature/cashering/credits/credits.route')
 const schedule = require('../feature/cashering/schedule/schedule.route')
 const request = require('../feature/cashering/request/request.route')
 const returned = require('../feature/cashering/returned/returned.route')
+const reimburse = require('../feature/cashering/reimburse/reimburse.route')
+const remittance = require('../feature/cashering/remittance/remittance.route')
+const collection = require('../feature/cashering/collection/collection.route')
 
 module.exports = {
     transaction,
@@ -15,5 +18,8 @@ module.exports = {
     credits,
     schedule,
     request,
-    returned
+    returned,
+    reimburse,
+    remittance,
+    collection
 }
