@@ -1,19 +1,8 @@
 const mysql = require('mysql')
 
-// var my = mysql.createPool({
-//     host: process.env.MY_SERVER,
-//     user: process.env.MY_USER,
-//     password: process.env.MY_PASSWORD,
-//     database: process.env.MY_DATABASE,
-//     waitForConnections: true,
-//     multipleStatements: true,
-//     connectionLimit: 10,
-//     queueLimit: 0
-// })
+var cl = mysql.createPool('mysql://ql4nryngt7llnxn6c2gq:pscale_pw_xhSDbUrfZUh1lFznu8jyaW18pvuYR8BrQ0cuOEssIag@aws.connect.psdb.cloud/app-jbs-hpos?ssl={"rejectUnauthorized":true}')
 
-var my = mysql.createPool('mysql://ql4nryngt7llnxn6c2gq:pscale_pw_xhSDbUrfZUh1lFznu8jyaW18pvuYR8BrQ0cuOEssIag@aws.connect.psdb.cloud/app-jbs-hpos?ssl={"rejectUnauthorized":true}')
-
-my.getConnection((err, con) => {
+cl.getConnection((err, con) => {
     if (err) {
         console.log(`\x1b[41m`, `ERROR`, '\x1b[0m', `Failed to load server @ ${process.env.MY_SERVER}/${process.env.MY_DATABASE}`)
         if (err.code === 'PROTOCOL_CONNECTION_LOST') {
@@ -30,10 +19,10 @@ my.getConnection((err, con) => {
         }
     }
     else {
-        console.log(`\x1b[45m`, `MYSQL`, '\x1b[0m', `@ ${process.env.MY_SERVER}/${process.env.MY_DATABASE}\n`)
+        console.log(`\x1b[43m`, `CLOUD`, '\x1b[0m', `@ planetscale/app-jbs-hpos\n`)
     }
     if (con) con.release()
     return
 })
 
-module.exports = my
+module.exports = cl

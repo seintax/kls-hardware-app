@@ -131,6 +131,16 @@ CREATE TABLE pos_stock_masterlist (
     prod_status      varchar(1) DEFAULT "A"
 );
 
+CREATE TABLE pos_stock_delivery (
+    dlvr_id          int auto_increment primary key,
+    dlvr_supplier    int,
+    dlvr_drno        varchar(50),
+    dlvr_drdate      date,
+    dlvr_remarks     varchar(150),
+    dlvr_count       int DEFAULT 0,
+    dlvr_value       decimal(30,2) DEFAULT 0
+);
+
 CREATE TABLE pos_stock_inventory (
     invt_id          int auto_increment primary key,
     invt_product     int,
@@ -156,22 +166,12 @@ CREATE TABLE pos_stock_inventory (
     invt_status      varchar(1) DEFAULT "A"
 );
 
-CREATE TABLE pos_stock_delivery (
-    dlvr_id          int auto_increment primary key,
-    dlvr_supplier    int,
-    dlvr_drno        varchar(50),
-    dlvr_drdate      date,
-    dlvr_remarks     varchar(150),
-    dlvr_count       int DEFAULT 0,
-    dlvr_value       decimal(30,2) DEFAULT 0
-);
-
 CREATE TABLE pos_stock_conversion (
     conv_id          int auto_increment primary key,
     conv_item        int,
     conv_product     int,
     conv_sku         varchar(99),
-    conv_date        date,
+    conv_time        timestamp DEFAULT now(),
     conv_item_unit   varchar(99),
     conv_item_qty    decimal(10,2),
     conv_prod_unit   varchar(99),
@@ -185,7 +185,8 @@ CREATE TABLE pos_stock_conversion (
     conv_vatable     varchar(1) DEFAULT "Y",
     conv_isloose     varchar(1) DEFAULT "N",
     conv_acquisition varchar(20) DEFAULT 'CONVERSION',
-    conv_status      varchar(1) DEFAULT "A"
+    conv_status      varchar(1) DEFAULT "A",
+    conv_ref         int unique
 );
 
 CREATE TABLE pos_stock_transfer (
@@ -211,14 +212,16 @@ CREATE TABLE pos_stock_transfer_item (
     trni_status      varchar(1) DEFAULT "A"
 );
 
-CREATE TABLE pos_stock_prices (
-    prce_id          int auto_increment primary key,
-    prce_item        int,
-    prce_product     int,
-    prce_time        timestamp DEFAULT now(),
-    prce_fr_price    decimal(30,2),
-    prce_to_price    decimal(30,2),
-    prce_acquisition varchar(20) DEFAULT 'PROCUREMENT'
+CREATE TABLE pos_stock_price_change (
+    chng_id          int auto_increment primary key,
+    chng_item        int,
+    chng_product     int,
+    chng_conv        int DEFAULT 0,
+    chng_time        timestamp DEFAULT now(),
+    chng_stocks      decimal(10,2),
+    chng_old_price   decimal(30,2),
+    chng_new_price   decimal(30,2),
+    chng_acquisition varchar(20) DEFAULT 'PROCUREMENT'
 );
 
 CREATE TABLE pos_sales_transaction (
@@ -230,6 +233,7 @@ CREATE TABLE pos_sales_transaction (
     trns_total       decimal(30,2),
     trns_less        decimal(30,2),
     trns_net         decimal(30,2),
+    trns_return      decimal(30,2) DEFAULT 0,
     trns_discount    decimal(5,2) DEFAULT 0,
     trns_tended      decimal(30,2),
     trns_change      decimal(30,2),
@@ -239,6 +243,8 @@ CREATE TABLE pos_sales_transaction (
     trns_date        date,
     UNIQUE KEY `uniq_order` (trns_order, trns_date)
 );
+
+ALTER TABLE pos_sales_transaction ADD COLUMN trns_return decimal(30,2) DEFAULT 0 AFTER trns_net;
 
 CREATE TABLE pos_sales_dispensing (
     sale_id          int auto_increment primary key,
@@ -287,6 +293,7 @@ CREATE TABLE pos_payment_collection (
     paym_refcode     varchar(50),
     paym_refdate     date,
     paym_refstat     varchar(30) DEFAULT 'NOT APPLICABLE',
+    paym_reimburse   int DEFAULT 0,
     paym_shift       int
 );
 
@@ -303,6 +310,7 @@ CREATE TABLE pos_return_transaction (
     rtrn_r_less      decimal(30,2),
     rtrn_r_net       decimal(30,2),
     rtrn_discount    decimal(5,2) DEFAULT 0,
+    rtrn_shift       int,
     rtrn_requestedby int,
     rtrn_requestedon timestamp DEFAULT now(),
     rtrn_authorizeby int,
@@ -317,6 +325,7 @@ CREATE TABLE pos_return_dispensing (
     rsal_item        int,
     rsal_product     int,
     rsal_conv        int,
+    rsal_request     int,
     rsal_qty         decimal(10,2),
     rsal_price       decimal(30,2),
     rsal_vat         decimal(30,2),
@@ -325,6 +334,18 @@ CREATE TABLE pos_return_dispensing (
     rsal_net         decimal(30,2),
     rsal_discount    decimal(5,2) DEFAULT 0,
     rsal_taxrated    decimal(5,2) DEFAULT 0
+);
+
+CREATE TABLE pos_return_reimbursement (
+    reim_id          int auto_increment primary key,
+    reim_trans       varchar(99),
+    reim_time        timestamp DEFAULT now(),
+    reim_request     int,
+    reim_method      varchar(30),
+    reim_amount      decimal(30,2),
+    reim_refcode     varchar(50),
+    reim_account     int,
+    reim_shift       int
 );
 
 CREATE TABLE pos_shift_schedule (
@@ -360,9 +381,9 @@ CREATE TABLE pos_shift_rcd (
     crcd_php_5h      int DEFAULT 0,
     crcd_php_2h      int DEFAULT 0,
     crcd_php_1h      int DEFAULT 0,
-    crcd_php_5t      int DEFAULT 0,
-    crcd_php_2t      int DEFAULT 0,
-    crcd_php_1t      int DEFAULT 0,
+    crcd_php_50      int DEFAULT 0,
+    crcd_php_20      int DEFAULT 0,
+    crcd_php_10      int DEFAULT 0,
     crcd_php_5p      int DEFAULT 0,
     crcd_php_1p      int DEFAULT 0,
     crcd_php_0c      int DEFAULT 0,
