@@ -71,11 +71,11 @@ const searchRecord = async (param, callback) => {
 
 const availableRecord = async (param, callback) => {
     let { drdate, stocks } = table.inventory.fields
-    let { name } = table.inventory.joined
+    let { name, details } = table.inventory.joined
     let options = {
         parameter: [param.search?.Contains(), "0"],
         filter: [name?.Like(), stocks?.Greater()],
-        order: [name?.Asc(), drdate?.Desc()]
+        order: [name?.Asc(), details?.Asc(), drdate?.Desc()]
     }
     let sql = query.builder.rec(table.inventory, options.filter, options.order)
     my.query(sql, options.parameter, (err, ans) => {
