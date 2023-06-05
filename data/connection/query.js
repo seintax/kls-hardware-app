@@ -46,6 +46,10 @@ const searchBuilder = (parameter, table) => {
         filters.push(`${table.fields[prop]} LIKE ?`)
         parameters.push(parameter === undefined ? `%%` : `%${parameter}%`)
     }
+    for (const prop in table.joined) {
+        filters.push(`${table.joined[prop]} LIKE ?`)
+        parameters.push(parameter === undefined ? `%%` : `%${parameter}%`)
+    }
     return {
         parameters: parameters,
         filters: filters
