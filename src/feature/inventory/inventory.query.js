@@ -59,9 +59,10 @@ const uniqueRecord = async (param, callback) => {
 }
 
 const searchRecord = async (param, callback) => {
+    let { drdate } = table.inventory.fields
     let { name } = table.inventory.joined
     let helper = query.searchBuilder(param.search, table.inventory)
-    let sql = query.builder.src(table.inventory, helper.filters, [name?.Asc()])
+    let sql = query.builder.src(table.inventory, helper.filters, [name?.Asc(), drdate?.Asc()])
     my.query(sql, helper.parameters, (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
