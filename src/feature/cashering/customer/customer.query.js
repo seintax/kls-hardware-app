@@ -60,7 +60,7 @@ const uniqueRecord = async (param, callback) => {
 const searchRecord = async (param, callback) => {
     let { name, value } = table.customer.fields
     let helper = query.searchBuilder(param.search, table.customer)
-    let sql = query.builder.src(table.customer, helper.filters, [name?.Asc()], [value.Greater("0")])
+    let sql = query.builder.src(table.customer, helper.filters, [name?.Asc()], [value?.Greater("0")])
     my.query(sql, helper.parameters, (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
