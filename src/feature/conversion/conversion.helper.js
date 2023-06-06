@@ -10,7 +10,7 @@ const conversion = {
         itemunit: 'conv_item_unit',
         itemqty: 'conv_item_qty',
         convunit: 'conv_prod_unit',
-        conqty: 'conv_prod_qty',
+        convqty: 'conv_prod_qty',
         stocks: 'conv_stocks',
         cost: 'conv_cost',
         price: 'conv_price',

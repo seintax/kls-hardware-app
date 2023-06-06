@@ -111,6 +111,18 @@ const transferRecord = async (param, callback) => {
     })
 }
 
+const convertRecord = async (param, callback) => {
+    let sql = (
+        param.op === "add" ?
+            table.inventory.convertAdded.replaceAll("@qty", param.qty).replaceAll("@amt", param.amt) :
+            table.inventory.convertMinus.replaceAll("@qty", param.qty).replaceAll("@amt", param.amt)
+    )
+    my.query(sql, [param.id], async (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 const batchRecord = async (param, callback) => {
     let batch = await Promise.all(param?.cart?.map(async item => {
         let retrieve = await new Promise((resolve, reject) => {
@@ -157,6 +169,7 @@ module.exports = {
     availableRecord,
     inventoryRecord,
     transferRecord,
+    convertRecord,
     batchRecord,
     returnRecord
 }

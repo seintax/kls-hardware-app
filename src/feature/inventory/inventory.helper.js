@@ -33,6 +33,8 @@ const inventory = {
     balanceMinus: 'UPDATE pos_stock_inventory SET invt_stocks=(invt_stocks - @qty),invt_trni_total=(invt_trni_total + @qty) WHERE invt_id = ?',
     returnAdded: 'UPDATE pos_stock_inventory SET invt_stocks=(invt_stocks + @qty) WHERE invt_id = ?',
     returnMinus: 'UPDATE pos_stock_inventory SET invt_stocks=(invt_stocks - @qty) WHERE invt_id = ?',
+    convertAdded: 'UPDATE pos_stock_inventory SET invt_stocks=(invt_stocks + @qty),invt_conv_count=(invt_conv_count - @qty),invt_conv_count=(invt_conv_total - @amt) WHERE invt_id = ?',
+    convertMinus: 'UPDATE pos_stock_inventory SET invt_stocks=(invt_stocks - @qty),invt_conv_count=(invt_conv_count + @qty),invt_conv_count=(invt_conv_total + @amt) WHERE invt_id = ?',
 }
 
 module.exports = {
