@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const service = require('./customer.query')
 
-router.route('/cashering/creditor')
+router.route('/cashering/customer')
     .get(async (req, res) => {
         await service.selectRecord(req.query, (err, ans) => {
             if (err) return res.status(200).json({
@@ -47,7 +47,7 @@ router.route('/cashering/creditor')
         })
     })
 
-router.get('/cashering/creditor/element', async (req, res) => {
+router.get('/cashering/customer/element', async (req, res) => {
     await service.uniqueRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err
@@ -59,7 +59,7 @@ router.get('/cashering/creditor/element', async (req, res) => {
     })
 })
 
-router.get('/cashering/creditor/search', async (req, res) => {
+router.get('/cashering/customer/search', async (req, res) => {
     await service.searchRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err
@@ -71,7 +71,7 @@ router.get('/cashering/creditor/search', async (req, res) => {
     })
 })
 
-router.patch('/cashering/creditor/balance', async (req, res) => {
+router.patch('/cashering/customer/balance', async (req, res) => {
     await service.balanceRecord(req.body, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err

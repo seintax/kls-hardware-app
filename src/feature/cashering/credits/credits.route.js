@@ -83,4 +83,16 @@ router.get('/cashering/credits/ongoing', async (req, res) => {
     })
 })
 
+router.patch('/cashering/credits/return', async (req, res) => {
+    await service.returnRecord(req.body, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
 module.exports = router

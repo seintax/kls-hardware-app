@@ -14,7 +14,8 @@ const credits = {
         waived: 'cred_waived',
         status: 'cred_status',
         settledon: 'cred_settledon',
-    }
+    },
+    balanceUpdate: `UPDATE pos_sales_credit SET cred_total=(cred_total - @amt), cred_balance=(cred_balance - @amt) WHERE cred_status='ON-GOING' AND cred_trans=?`
 }
 
 module.exports = {

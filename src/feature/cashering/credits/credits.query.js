@@ -81,6 +81,14 @@ const ongoingRecord = async (param, callback) => {
     })
 }
 
+const returnRecord = async (param, callback) => {
+    let sql = table.credits.balanceUpdate.replaceAll("@amt", param.amt)
+    my.query(sql, [param.code], async (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 module.exports = {
     createRecord,
     updateRecord,
@@ -88,5 +96,6 @@ module.exports = {
     selectRecord,
     uniqueRecord,
     searchRecord,
-    ongoingRecord
+    ongoingRecord,
+    returnRecord
 }

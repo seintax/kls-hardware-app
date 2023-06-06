@@ -8,39 +8,39 @@ String.prototype.Desc = function () {
     return `${base} DESC`
 }
 
-String.prototype.Like = function () {
+String.prototype.Like = function (val = undefined) {
     let base = (this === undefined ? "" : this.toString())
-    return `${base} LIKE ?`
+    return `${base} LIKE ${val ? val : "?"}`
 }
 
-String.prototype.NotLike = function () {
+String.prototype.NotLike = function (val = undefined) {
     let base = (this === undefined ? "" : this.toString())
-    return `${base} NOT LIKE ?`
+    return `${base} NOT LIKE ${val ? val : "?"}`
 }
 
-String.prototype.Is = function () {
+String.prototype.Is = function (val = undefined) {
     let base = (this === undefined ? "" : this.toString())
-    return `${base} = ?`
+    return `${base} = ${val ? val : "?"}`
 }
 
-String.prototype.Between = function () {
+String.prototype.Between = function (fr = undefined, to = undefined) {
     let base = (this === undefined ? "" : this.toString())
-    return `(${base} BETWEEN ? AND ?)`
+    return `(${base} BETWEEN ${fr ? fr : "?"} AND ${to ? to : "?"})`
 }
 
-String.prototype.Greater = function () {
+String.prototype.Greater = function (val = undefined) {
     let base = (this === undefined ? "" : this.toString())
-    return `${base} > ?`
+    return `${base} > ${val ? val : "?"}`
 }
 
-String.prototype.Lesser = function () {
+String.prototype.Lesser = function (val = undefined) {
     let base = (this === undefined ? "" : this.toString())
-    return `${base} < ?`
+    return `${base} < ${val ? val : "?"}`
 }
 
-String.prototype.IsNot = function () {
+String.prototype.IsNot = function (val = undefined) {
     let base = (this === undefined ? "" : this.toString())
-    return `${base} <> ?`
+    return `${base} <> ${val ? val : "?"}`
 }
 
 String.prototype.IsNull = function () {
@@ -71,5 +71,10 @@ String.prototype.Starts = function () {
 String.prototype.Ends = function () {
     let base = (this === undefined ? "" : this)
     return `%${base}`
+}
+
+String.prototype.Qoute = function () {
+    let base = (this === undefined ? "" : this)
+    return `'${base}'`
 }
 
