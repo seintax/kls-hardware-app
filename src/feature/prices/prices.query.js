@@ -1,24 +1,24 @@
 const mysql = require('mysql')
-const my = require('../../../../data/connection/mysql')
-const cache = require('../../../../data/connection/cache')
-const query = require('../../../../data/connection/query')
-const table = require('./customer.helper')
-require("../../../utilities/query.prototypes")
+const my = require('../../../data/connection/mysql')
+const cache = require('../../../data/connection/cache')
+const query = require('../../../data/connection/query')
+const table = require('./prices.helper')
+require("../../utilities/query.prototypes")
 
 const createRecord = async (param, callback) => {
-    let helper = query.createBuilder(param, table.customer)
-    let sql = query.builder.add(table.customer.name, helper.create.fields, helper.create.values)
+    let helper = query.createBuilder(param, table.prices)
+    let sql = query.builder.add(table.prices.name, helper.create.fields, helper.create.values)
     my.query(sql, helper.parameters, async (err, ans) => {
         if (err) return callback(err)
-        const res = ans
+        let res = ans
         await cache.creationCache(sql, ans['insertId'])
         return callback(null, res)
     })
 }
 
 const updateRecord = async (param, callback) => {
-    let helper = query.updateBuilder(param, table.customer)
-    let sql = query.builder.set(table.customer.name, helper.update.fields, table.customer.fields.id)
+    let helper = query.updateBuilder(param, table.prices)
+    let sql = query.builder.set(table.prices.name, helper.update.fields, table.prices.fields.id)
     await cache.modificyCache(sql, param.id)
     my.query(sql, helper.parameters, async (err, ans) => {
         if (err) return callback(err)
@@ -27,7 +27,7 @@ const updateRecord = async (param, callback) => {
 }
 
 const deleteRecord = async (param, callback) => {
-    let sql = query.builder.del(table.customer.name, table.customer.fields.id)
+    let sql = query.builder.del(table.prices.name, table.prices.fields.id)
     await cache.modificyCache(sql, param.id)
     my.query(sql, [param.id], async (err, ans) => {
         if (err) return callback(err)
@@ -36,13 +36,14 @@ const deleteRecord = async (param, callback) => {
 }
 
 const selectRecord = async (param, callback) => {
-    let { name, id } = table.customer.fields
+    let { id } = table.prices.fields
+    let { name } = table.prices.joined
     let options = {
         parameter: [param.search?.Contains()],
         filter: [name?.Like()],
         order: [id?.Asc()]
     }
-    let sql = query.builder.rec(table.customer, options.filter, options.order)
+    let sql = query.builder.rec(table.prices, options.filter, options.order)
     my.query(sql, options.parameter, (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
@@ -50,7 +51,7 @@ const selectRecord = async (param, callback) => {
 }
 
 const uniqueRecord = async (param, callback) => {
-    let sql = query.builder.get(table.customer, table.customer.fields.id)
+    let sql = query.builder.get(table.prices, table.prices.fields.id)
     my.query(sql, [param.id], (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
@@ -58,18 +59,11 @@ const uniqueRecord = async (param, callback) => {
 }
 
 const searchRecord = async (param, callback) => {
-    let { name, value } = table.customer.fields
-    let helper = query.searchBuilder(param.search, table.customer)
-    let sql = query.builder.src(table.customer, helper.filters, [name?.Asc()], [value.Greater("0")])
+    let { drdate } = table.prices.fields
+    let { name } = table.prices.joined
+    let helper = query.searchBuilder(param.search, table.prices)
+    let sql = query.builder.src(table.prices, helper.filters, [drdate?.Desc()])
     my.query(sql, helper.parameters, (err, ans) => {
-        if (err) return callback(err)
-        return callback(null, ans)
-    })
-}
-
-const balanceRecord = async (param, callback) => {
-    let sql = table.customer.balanceUpdate
-    my.query(sql, [param.id], async (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
     })
@@ -82,5 +76,4 @@ module.exports = {
     selectRecord,
     uniqueRecord,
     searchRecord,
-    balanceRecord
 }

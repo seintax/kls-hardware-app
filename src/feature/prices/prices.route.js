@@ -1,7 +1,7 @@
 const router = require('express').Router()
-const service = require('./payment.query')
+const service = require('./prices.query')
 
-router.route('/cashering/payment')
+router.route('/prices')
     .get(async (req, res) => {
         await service.selectRecord(req.query, (err, ans) => {
             if (err) return res.status(200).json({
@@ -47,7 +47,7 @@ router.route('/cashering/payment')
         })
     })
 
-router.get('/cashering/payment/element', async (req, res) => {
+router.get('/prices/element', async (req, res) => {
     await service.uniqueRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err
@@ -59,56 +59,8 @@ router.get('/cashering/payment/element', async (req, res) => {
     })
 })
 
-router.get('/cashering/payment/search', async (req, res) => {
+router.get('/prices/search', async (req, res) => {
     await service.searchRecord(req.query, (err, ans) => {
-        if (err) return res.status(200).json({
-            success: false, error: err
-        })
-        return res.status(200).json({
-            success: true,
-            result: ans || {},
-        })
-    })
-})
-
-router.post('/cashering/payment/batch', async (req, res) => {
-    await service.batchRecord(req.body, (err, ans) => {
-        if (err) return res.status(200).json({
-            success: false, error: err
-        })
-        return res.status(200).json({
-            success: true,
-            result: ans || {},
-        })
-    })
-})
-
-router.get('/cashering/payment/transaction', async (req, res) => {
-    await service.transactionRecord(req.query, (err, ans) => {
-        if (err) return res.status(200).json({
-            success: false, error: err
-        })
-        return res.status(200).json({
-            success: true,
-            result: ans || {},
-        })
-    })
-})
-
-router.patch('/cashering/payment/return', async (req, res) => {
-    await service.returnRecord(req.body, (err, ans) => {
-        if (err) return res.status(200).json({
-            success: false, error: err
-        })
-        return res.status(200).json({
-            success: true,
-            result: ans || {},
-        })
-    })
-})
-
-router.get('/cashering/payment/cheque', async (req, res) => {
-    await service.chequeRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err
         })

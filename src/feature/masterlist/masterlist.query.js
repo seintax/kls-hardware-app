@@ -36,11 +36,11 @@ const deleteRecord = async (param, callback) => {
 }
 
 const selectRecord = async (param, callback) => {
-    let { name, id } = table.masterlist.fields
+    let { name, details } = table.masterlist.fields
     let options = {
         parameter: [param.search?.Contains()],
         filter: [name?.Like()],
-        order: [id?.Asc()]
+        order: [name?.Asc(), details?.Asc()]
     }
     let sql = query.builder.rec(table.masterlist, options.filter, options.order)
     my.query(sql, options.parameter, (err, ans) => {

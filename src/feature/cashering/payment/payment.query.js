@@ -109,8 +109,21 @@ const returnRecord = async (param, callback) => {
         })
         return retrieve
     }))
-    console.log(batch)
     return callback(null, batch)
+}
+
+const chequeRecord = async (param, callback) => {
+    let { method, refdate } = table.payment.fields
+    let options = {
+        parameter: [],
+        filter: [method?.Is("CHEQUE".Qoute())],
+        order: [refdate?.Desc()]
+    }
+    let sql = query.builder.rec(table.payment, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
 }
 
 module.exports = {
@@ -123,4 +136,5 @@ module.exports = {
     batchRecord,
     transactionRecord,
     returnRecord,
+    chequeRecord
 }

@@ -25,10 +25,12 @@ const dispensing = {
         details: "prod_details",
         unit: "prod_unit",
         category: "prod_category",
+        acquisition: "invt_acquisition",
         vatable: "invt_vatable",
         isloose: "invt_isloose",
+        method: "trns_method",
     },
-    conditional: 'LEFT JOIN pos_stock_masterlist ON prod_id=sale_product LEFT JOIN pos_stock_inventory ON invt_id=sale_item',
+    conditional: 'LEFT JOIN pos_stock_masterlist ON prod_id=sale_product LEFT JOIN pos_stock_inventory ON invt_id=sale_item LEFT JOIN pos_sales_transaction ON trns_code=sale_trans',
 }
 
 module.exports = {
