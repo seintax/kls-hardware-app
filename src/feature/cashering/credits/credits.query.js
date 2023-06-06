@@ -68,10 +68,10 @@ const searchRecord = async (param, callback) => {
 }
 
 const ongoingRecord = async (param, callback) => {
-    let { customer, status, id } = table.credits.fields
+    let { customer, status, balance, id } = table.credits.fields
     let options = {
         parameter: [param.customer?.Exact(), "ON-GOING"],
-        filter: [customer?.Is(), status?.Is()],
+        filter: [customer?.Is(), status?.Is(), balance?.Greater("0")],
         order: [id?.Asc()]
     }
     let sql = query.builder.rec(table.credits, options.filter, options.order)
