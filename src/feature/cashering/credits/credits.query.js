@@ -81,6 +81,20 @@ const ongoingRecord = async (param, callback) => {
     })
 }
 
+const transactionRecord = async (param, callback) => {
+    let { code, status, balance, id } = table.credits.fields
+    let options = {
+        parameter: [param.code?.Exact(), "ON-GOING"],
+        filter: [code?.Is(), status?.Is(), balance?.Greater("0")],
+        order: [id?.Asc()]
+    }
+    let sql = query.builder.rec(table.credits, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 const returnRecord = async (param, callback) => {
     let sql = table.credits.balanceUpdate.replaceAll("@amt", param.amt)
     my.query(sql, [param.code], async (err, ans) => {
@@ -97,5 +111,6 @@ module.exports = {
     uniqueRecord,
     searchRecord,
     ongoingRecord,
+    transactionRecord,
     returnRecord
 }

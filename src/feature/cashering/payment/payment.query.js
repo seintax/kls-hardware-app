@@ -85,8 +85,8 @@ const batchRecord = async (param, callback) => {
 const transactionRecord = async (param, callback) => {
     let { code, id } = table.payment.fields
     let options = {
-        parameter: [param.code?.Contains()],
-        filter: [code?.Like()],
+        parameter: [param.code?.Exact()],
+        filter: [code?.Is()],
         order: [id?.Asc()]
     }
     let sql = query.builder.rec(table.payment, options.filter, options.order)

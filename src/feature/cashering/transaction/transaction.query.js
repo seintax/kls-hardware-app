@@ -106,6 +106,24 @@ const loggedRecord = async (param, callback) => {
     })
 }
 
+const slipnoRecord = async (param, callback) => {
+    let { code, ordno } = table.transaction.fields
+    let { account } = table.transaction.joined
+    let options = {
+        parameter: [param.account?.Exact(), param.code?.Contains(), param.code?.Contains()],
+        filter: [account?.Is(), query.optional([
+            code?.Like(),
+            ordno?.Like(),
+        ])],
+        order: [code?.Desc()]
+    }
+    let sql = query.builder.rec(table.transaction, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 const codeRecord = async (param, callback) => {
     let { code, id } = table.transaction.fields
     let options = {
@@ -130,5 +148,6 @@ module.exports = {
     shiftRecord,
     readyRecord,
     loggedRecord,
+    slipnoRecord,
     codeRecord
 }

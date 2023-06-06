@@ -107,6 +107,18 @@ router.get('/cashering/transaction/logged', async (req, res) => {
     })
 })
 
+router.get('/cashering/transaction/slipno', async (req, res) => {
+    await service.slipnoRecord(req.query, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
 router.get('/cashering/transaction/code', async (req, res) => {
     await service.codeRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
