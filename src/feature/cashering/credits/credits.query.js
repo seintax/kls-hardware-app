@@ -96,7 +96,10 @@ const transactionRecord = async (param, callback) => {
 }
 
 const returnRecord = async (param, callback) => {
-    let sql = table.credits.balanceUpdate.replaceAll("@amt", param.amt)
+//     let sql = table.credits.balanceUpdate.replaceAll("@amt", param.amt)
+    let sql = param.rem > 0 ?
+        table.credits.balanceUpdate.replaceAll("@amt", param.amt) :
+        table.credits.returnUpdate
     my.query(sql, [param.code], async (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
