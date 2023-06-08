@@ -21,7 +21,16 @@ const dailySummary = async (param, callback) => {
     })
 }
 
+const weeklySales = async (param, callback) => {
+    let sql = table.reports.weeklySales.replaceAll("@fr", param.fr).replaceAll("@to", param.to)
+    my.query(sql, async (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 module.exports = {
     dailySales,
-    dailySummary
+    dailySummary,
+    weeklySales
 }

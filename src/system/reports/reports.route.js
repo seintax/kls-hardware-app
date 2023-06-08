@@ -25,4 +25,16 @@ router.get('/reports/daily-summary', async (req, res) => {
     })
 })
 
+router.get('/reports/weekly-summary', async (req, res) => {
+    await service.weeklySales(req.query, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
 module.exports = router
