@@ -102,8 +102,8 @@ const inventoryRecord = async (param, callback) => {
 const transferRecord = async (param, callback) => {
     let sql = (
         param.op === "add" ?
-            table.inventory.balanceAdded.replaceAll("@qty", param.qty) :
-            table.inventory.balanceMinus.replaceAll("@qty", param.qty)
+            table.inventory.transferAdded.replaceAll("@qty", param.qty) :
+            table.inventory.transferMinus.transferMinus("@qty", param.qty)
     )
     my.query(sql, [param.id], async (err, ans) => {
         if (err) return callback(err)
@@ -128,8 +128,8 @@ const batchRecord = async (param, callback) => {
         let retrieve = await new Promise((resolve, reject) => {
             let sql = (
                 param.op === "add" ?
-                    table.inventory.balanceAdded.replaceAll("@qty", item.purchase) :
-                    table.inventory.balanceMinus.replaceAll("@qty", item.purchase)
+                    table.inventory.inventoryAdded.replaceAll("@qty", item.purchase) :
+                    table.inventory.inventoryMinus.replaceAll("@qty", item.purchase)
             )
             my.query(sql, [item.item], async (err, ans) => {
                 if (err) return reject(err)
@@ -159,6 +159,16 @@ const returnRecord = async (param, callback) => {
     return callback(null, batch)
 }
 
+const balanceRecord = async (param, callback) => {
+    let sql = table.inventory.balanceUpdate
+    console.log(sql)
+    my.query(sql, async (err, ans) => {
+        if (err) return callback(err)
+        console.log(ans)
+        return callback(null, ans)
+    })
+}
+
 module.exports = {
     createRecord,
     updateRecord,
@@ -171,5 +181,6 @@ module.exports = {
     transferRecord,
     convertRecord,
     batchRecord,
-    returnRecord
+    returnRecord,
+    balanceRecord
 }

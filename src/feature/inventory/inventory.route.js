@@ -143,4 +143,16 @@ router.post('/inventory/return', async (req, res) => {
     })
 })
 
+router.post('/inventory/balance', async (req, res) => {
+    await service.balanceRecord(req.body, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
 module.exports = router

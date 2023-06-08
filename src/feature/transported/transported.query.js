@@ -8,6 +8,7 @@ require("../../utilities/query.prototypes")
 const createRecord = async (param, callback) => {
     let helper = query.createBuilder(param, table.transported)
     let sql = query.builder.add(table.transported.name, helper.create.fields, helper.create.values)
+    console.log(helper.parameters)
     my.query(sql, helper.parameters, async (err, ans) => {
         if (err) return callback(err)
         const res = ans
