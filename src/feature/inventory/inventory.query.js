@@ -60,7 +60,6 @@ const uniqueRecord = async (param, callback) => {
 
 const searchRecord = async (param, callback) => {
     let { drdate } = table.inventory.fields
-    let { name } = table.inventory.joined
     let helper = query.searchBuilder(param.search, table.inventory)
     let sql = query.builder.src(table.inventory, helper.filters, [drdate?.Desc()])
     my.query(sql, helper.parameters, (err, ans) => {
@@ -161,10 +160,8 @@ const returnRecord = async (param, callback) => {
 
 const balanceRecord = async (param, callback) => {
     let sql = table.inventory.balanceUpdate
-    console.log(sql)
     my.query(sql, async (err, ans) => {
         if (err) return callback(err)
-        console.log(ans)
         return callback(null, ans)
     })
 }
