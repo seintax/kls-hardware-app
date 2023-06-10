@@ -121,7 +121,7 @@ const transferRecord = async (param, callback) => {
     let sql = (
         param.op === "add" ?
             table.inventory.transferAdded.replaceAll("@qty", param.qty) :
-            table.inventory.transferMinus.transferMinus("@qty", param.qty)
+            table.inventory.transferMinus.replaceAll("@qty", param.qty)
     )
     my.query(sql, [param.id], async (err, ans) => {
         if (err) return callback(err)
