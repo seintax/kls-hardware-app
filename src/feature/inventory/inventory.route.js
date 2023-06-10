@@ -71,6 +71,18 @@ router.get('/inventory/available', async (req, res) => {
     })
 })
 
+router.get('/inventory/library', async (req, res) => {
+    await service.libraryRecord(req.query, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
 router.get('/inventory/search', async (req, res) => {
     await service.searchRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
