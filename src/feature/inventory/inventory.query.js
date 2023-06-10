@@ -103,6 +103,20 @@ const availableRecord = async (param, callback) => {
     })
 }
 
+const libraryRecord = async (param, callback) => {
+    let { name, details, drdate, stocks } = table.inventory.fields
+    let options = {
+        parameter: [param.search?.Contains()],
+        filter: [name?.Like(), stocks?.Greater("0")],
+        order: [name?.Asc(), details?.Asc(), drdate?.Asc()]
+    }
+    let sql = query.builder.rec(table.inventory, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 const inventoryRecord = async (param, callback) => {
     let { name, reference } = table.inventory.fields
     let options = {
@@ -198,5 +212,6 @@ module.exports = {
     convertRecord,
     batchRecord,
     returnRecord,
-    balanceRecord
+    balanceRecord,
+    libraryRecord
 }
