@@ -36,8 +36,7 @@ const deleteRecord = async (param, callback) => {
 }
 
 const selectRecord = async (param, callback) => {
-    let { id } = table.conversion.fields
-    let { name } = table.conversion.joined
+    let { name, id } = table.conversion.fields
     let options = {
         parameter: [param.search?.Contains()],
         filter: [name?.Like()],
@@ -60,7 +59,6 @@ const uniqueRecord = async (param, callback) => {
 
 const searchRecord = async (param, callback) => {
     let { drdate } = table.conversion.fields
-    let { name } = table.conversion.joined
     let helper = query.searchBuilder(param.search, table.conversion)
     let sql = query.builder.src(table.conversion, helper.filters, [drdate?.Desc()])
     my.query(sql, helper.parameters, (err, ans) => {
@@ -70,11 +68,10 @@ const searchRecord = async (param, callback) => {
 }
 
 const availableRecord = async (param, callback) => {
-    let { stocks } = table.conversion.fields
-    let { name, details, drdate } = table.conversion.joined
+    let { name, details, drdate, stocks } = table.conversion.fields
     let options = {
-        parameter: [param.search?.Contains(), "0"],
-        filter: [name?.Like(), stocks?.Greater()],
+        parameter: [param.search?.Contains()],
+        filter: [name?.Like(), stocks?.Greater("0")],
         order: [name?.Asc(), details?.Asc(), drdate?.Asc()]
     }
     let sql = query.builder.rec(table.conversion, options.filter, options.order)
@@ -85,8 +82,7 @@ const availableRecord = async (param, callback) => {
 }
 
 const inventoryRecord = async (param, callback) => {
-    let { reference } = table.conversion.fields
-    let { name } = table.conversion.joined
+    let { name, reference } = table.conversion.fields
     let options = {
         parameter: [param.id],
         filter: [reference?.Is()],

@@ -89,8 +89,7 @@ const readyRecord = async (param, callback) => {
 }
 
 const loggedRecord = async (param, callback) => {
-    let { date, code, ordno, id } = table.transaction.fields
-    let { account } = table.transaction.joined
+    let { date, code, ordno, account } = table.transaction.fields
     let options = {
         parameter: [param.datefr?.Exact(), param.dateto?.Exact(), param.account?.Exact(), param.code?.Contains(), param.code?.Contains()],
         filter: [date?.Between(), account?.Is(), query.optional([
@@ -107,8 +106,7 @@ const loggedRecord = async (param, callback) => {
 }
 
 const slipnoRecord = async (param, callback) => {
-    let { code, ordno } = table.transaction.fields
-    let { account } = table.transaction.joined
+    let { code, ordno, account } = table.transaction.fields
     let options = {
         parameter: [param.account?.Exact(), param.code?.Contains(), param.code?.Contains()],
         filter: [account?.Is(), query.optional([

@@ -157,14 +157,45 @@ CREATE TABLE pos_stock_inventory (
     invt_brand       varchar(50),
     invt_model       varchar(50),
     invt_conv_count  int DEFAULT 0,
+    invt_trni_count  int DEFAULT 0,
+    invt_conv_value  decimal(30,2) DEFAULT 0,
+    invt_trni_value  decimal(30,2) DEFAULT 0,
     invt_conv_total  decimal(10,2) DEFAULT 0,
-    invt_conv_spare  decimal(10,2) DEFAULT 0,
     invt_trni_total  decimal(10,2) DEFAULT 0,
+    invt_conv_spare  decimal(10,2) DEFAULT 0,
+    invt_sold_total  decimal(10,2) DEFAULT 0,
     invt_vatable     varchar(1) DEFAULT "Y",
     invt_isloose     varchar(1) DEFAULT "N",
     invt_acquisition varchar(20) DEFAULT 'PROCUREMENT',
-    invt_status      varchar(1) DEFAULT "A"
+    invt_status      varchar(1) DEFAULT "A",
+    invt_category    varchar(75),
+    invt_name        varchar(99),
+    invt_details     varchar(99),
+    invt_unit        varchar(99)
 );
+
+ALTER TABLE pos_stock_inventory ADD COLUMN invt_trni_count int DEFAULT 0 AFTER invt_conv_count;
+
+ALTER TABLE pos_stock_inventory ADD COLUMN invt_conv_value decimal(30,2) DEFAULT 0 AFTER invt_trni_count;
+
+ALTER TABLE pos_stock_inventory ADD COLUMN invt_trni_value decimal(30,2) DEFAULT 0 AFTER invt_conv_value;
+
+ALTER TABLE pos_stock_inventory ADD COLUMN invt_sold_total decimal(10,2) DEFAULT 0 AFTER invt_trni_total;
+
+ALTER TABLE pos_stock_inventory
+    ADD COLUMN invt_category varchar(75),
+    ADD COLUMN invt_name varchar(99),
+    ADD COLUMN invt_details varchar(99),
+    ADD COLUMN invt_unit varchar(99);
+
+UPDATE pos_stock_inventory a
+        INNER JOIN pos_stock_masterlist b
+            ON b.prod_id = a.invt_product
+    SET
+        a.invt_name = b.prod_name,
+        a.invt_details = b.prod_details,
+        a.invt_unit = b.prod_unit,
+        a.invt_category = b.prod_category;
 
 CREATE TABLE pos_stock_conversion (
     conv_id          int auto_increment primary key,
@@ -186,8 +217,38 @@ CREATE TABLE pos_stock_conversion (
     conv_isloose     varchar(1) DEFAULT "N",
     conv_acquisition varchar(20) DEFAULT 'CONVERSION',
     conv_status      varchar(1) DEFAULT "A",
-    conv_ref         int unique
+    conv_ref         int unique,
+    conv_item_supplier    varchar(99),
+    conv_item_drno        varchar(50),
+    conv_item_drdate      date,
+    conv_category    varchar(75),
+    conv_name        varchar(99),
+    conv_details     varchar(99),
+    conv_unit        varchar(99)
 );
+
+ALTER TABLE pos_stock_conversion
+    ADD COLUMN conv_item_supplier varchar(99),
+    ADD COLUMN conv_item_drno varchar(50),
+    ADD COLUMN conv_item_drdate date,
+    ADD COLUMN conv_category varchar(75),
+    ADD COLUMN conv_name varchar(99),
+    ADD COLUMN conv_details varchar(99),
+    ADD COLUMN conv_unit varchar(99);
+
+UPDATE pos_stock_conversion a
+        INNER JOIN pos_stock_masterlist b
+            ON b.prod_id = a.conv_product 
+        INNER JOIN pos_stock_inventory c 
+            ON c.invt_id = a.conv_item
+    SET
+        a.conv_item_supplier = c.invt_supplier,
+        a.conv_item_drno = c.invt_drno,
+        a.conv_item_drdate = c.invt_drdate,
+        a.conv_name = b.prod_name,
+        a.conv_details = b.prod_details,
+        a.conv_unit = b.prod_unit,
+        a.conv_category = b.prod_category;
 
 CREATE TABLE pos_stock_transfer (
     trnr_id          int auto_increment primary key,
@@ -240,11 +301,20 @@ CREATE TABLE pos_sales_transaction (
     trns_method      varchar(30),
     trns_shift       int,
     trns_status      varchar(20) DEFAULT 'READY',
+    trns_account     int,
     trns_date        date,
     UNIQUE KEY `uniq_order` (trns_order, trns_date)
 );
 
 ALTER TABLE pos_sales_transaction ADD COLUMN trns_return decimal(30,2) DEFAULT 0 AFTER trns_net;
+
+ALTER TABLE pos_sales_transaction ADD COLUMN trns_account int AFTER trns_status;
+
+UPDATE pos_sales_transaction a
+        INNER JOIN pos_shift_schedule b
+            ON b.shft_id = a.trns_shift
+    SET
+        a.trns_account = b.shft_account;
 
 CREATE TABLE pos_sales_dispensing (
     sale_id          int auto_increment primary key,
@@ -253,7 +323,7 @@ CREATE TABLE pos_sales_dispensing (
     sale_time        timestamp DEFAULT now(),
     sale_item        int,
     sale_product     int,
-    sale_conv        int,
+    sale_conv        int DEFAULT 0,
     sale_purchase    decimal(10,2),
     sale_dispense    decimal(10,2),
     sale_price       decimal(30,2),

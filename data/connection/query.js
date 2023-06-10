@@ -69,6 +69,19 @@ const alias = (table) => {
     return names.join(", ")
 }
 
+const compare = (base, fields) => {
+    const names = []
+    for (const prop in base) {
+        if (fields.hasOwnProperty(prop)) {
+            names.push(`${fields[prop]} AS ${prop}`)
+        }
+        else {
+            names.push(`'' AS ${prop}`)
+        }
+    }
+    return names.join(", ")
+}
+
 // query builder for create
 const add = (name, fields, values) => {
     return `INSERT INTO ${name} (${fields}) VALUES (${values});`
@@ -87,19 +100,35 @@ const del = (name, id) => {
 // query builder for select
 const rec = (table, filter, order, limit) => {
     let condition = table?.conditional ? ` ${table?.conditional}` : ""
-    return `SELECT ${alias(table)} FROM ${table.name}${condition} WHERE ${filter.join(" AND ")} ORDER BY ${order.join(", ")}${limit ? ` LIMIT ${limit}` : ""}`
+    return `SELECT ${alias(table)} FROM ${table.name}${condition} WHERE ${filter.join(" AND ")}${order ? ` ORDER BY ${order.join(", ")}` : ""}${limit ? ` LIMIT ${limit}` : ""}`
 }
 
 // query builder for select
-const src = (table, filter, order) => {
+const src = (table, filter, order, situational = []) => {
     let condition = table?.conditional ? ` ${table?.conditional}` : ""
-    return `SELECT ${alias(table)} FROM ${table.name}${condition} WHERE ${filter.join(" OR ")} ORDER BY ${order.join(", ")}`
+    let situation = filter?.length ? ` AND ${situational.join(" AND ")}` : ` ${situational.join(" AND ")}`
+    return `SELECT ${alias(table)} FROM ${table.name}${condition} WHERE (${filter.join(" OR ")})${situational.length ? situation : ""} ORDER BY ${order.join(", ")}`
 }
 
 // query builder for single
 const get = (table, id) => {
     let condition = table?.conditional ? ` ${table?.conditional}` : ""
     return `SELECT ${alias(table)} FROM ${table.name}${condition} WHERE ${id}=?`
+}
+
+// query builder for union
+const union = (array, base, order, limit) => {
+    const parameters = []
+    let sql = array?.map(data => {
+        data?.options?.parameter?.map(param => {
+            parameters.push(param)
+        })
+        return `SELECT ${compare(base, data?.fields)} FROM ${data?.name} WHERE ${data?.options?.filter.join(" AND ")}`
+    })
+    return {
+        query: `${sql.join(" UNION ")}${order ? ` ORDER BY ${order.join(", ")}` : ""}${limit ? ` LIMIT ${limit}` : ""}`,
+        parameter: parameters
+    }
 }
 
 const optional = (options) => {
@@ -112,7 +141,8 @@ const builder = {
     del: del,
     rec: rec,
     get: get,
-    src: src
+    src: src,
+    union: union
 }
 
 module.exports = {
