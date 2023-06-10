@@ -3,6 +3,7 @@ const my = require('../../../data/connection/mysql')
 const cache = require('../../../data/connection/cache')
 const query = require('../../../data/connection/query')
 const table = require('./inventory.helper')
+const assoc = require('../conversion/conversion.helper')
 require("../../utilities/query.prototypes")
 
 const createRecord = async (param, callback) => {
@@ -36,8 +37,7 @@ const deleteRecord = async (param, callback) => {
 }
 
 const selectRecord = async (param, callback) => {
-    let { id } = table.inventory.fields
-    let { name } = table.inventory.joined
+    let { name, id } = table.inventory.fields
     let options = {
         parameter: [param.search?.Contains()],
         filter: [name?.Like()],
@@ -68,24 +68,43 @@ const searchRecord = async (param, callback) => {
     })
 }
 
-const availableRecord = async (param, callback) => {
-    let { drdate, stocks } = table.inventory.fields
-    let { name, details } = table.inventory.joined
+const associateTable = (param) => {
+    let { name, details, drdate, stocks } = assoc.conversion.fields
     let options = {
-        parameter: [param.search?.Contains(), "0"],
-        filter: [name?.Like(), stocks?.Greater()],
+        parameter: [param.search?.Contains()],
+        filter: [name?.Like(), stocks?.Greater("0")],
         order: [name?.Asc(), details?.Asc(), drdate?.Asc()]
     }
-    let sql = query.builder.rec(table.inventory, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
+    return {
+        name: assoc.conversion.name,
+        fields: assoc.conversion.product,
+        options: options
+    }
+}
+
+const availableRecord = async (param, callback) => {
+    let { name, details, drdate, stocks } = table.inventory.fields
+    let options = {
+        parameter: [param.search?.Contains()],
+        filter: [name?.Like(), stocks?.Greater("0")],
+        order: [name?.Asc(), details?.Asc(), drdate?.Asc()]
+    }
+    // let sql = query.builder.rec(table.inventory, options.filter, options.order)
+    let inv = {
+        name: table.inventory.name,
+        fields: table.inventory.product,
+        options: options
+    }
+    let cnv = associateTable(param)
+    let union = query.builder.union([inv, cnv], table.inventory.product, ["name".Asc(), "details".Asc(), "drdate".Asc()])
+    my.query(union.query, union.parameter, (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
     })
 }
 
 const inventoryRecord = async (param, callback) => {
-    let { reference } = table.inventory.fields
-    let { name } = table.inventory.joined
+    let { name, reference } = table.inventory.fields
     let options = {
         parameter: [param.id],
         filter: [reference?.Is()],
