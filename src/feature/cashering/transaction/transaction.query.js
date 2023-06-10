@@ -68,7 +68,7 @@ const searchRecord = async (param, callback) => {
 
 const shiftRecord = async (param, callback) => {
     let sql = table.transaction.shiftRecord
-    my.query(sql, [param.shift], (err, ans) => {
+    my.query(sql, [param.code, param.shift], (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
     })
