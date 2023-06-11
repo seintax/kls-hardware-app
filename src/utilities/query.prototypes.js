@@ -10,22 +10,22 @@ String.prototype.Desc = function () {
 
 String.prototype.Like = function (val = undefined) {
     let base = (this === undefined ? "" : this.toString())
-    return `${base} LIKE ${val ? val : "?"}`
+    return `${base} LIKE ${val ? `'%${val}%'` : "?"}`
 }
 
 String.prototype.NotLike = function (val = undefined) {
     let base = (this === undefined ? "" : this.toString())
-    return `${base} NOT LIKE ${val ? val : "?"}`
+    return `${base} NOT LIKE ${val ? `'%${val}%'` : "?"}`
 }
 
 String.prototype.Is = function (val = undefined) {
     let base = (this === undefined ? "" : this.toString())
-    return `${base} = ${val ? val : "?"}`
+    return `${base} = ${val ? `'${val}'` : "?"}`
 }
 
 String.prototype.Between = function (fr = undefined, to = undefined) {
     let base = (this === undefined ? "" : this.toString())
-    return `(${base} BETWEEN ${fr ? fr : "?"} AND ${to ? to : "?"})`
+    return `(${base} BETWEEN ${fr ? `'${fr}'` : "?"} AND ${to ? `'${to}'` : "?"})`
 }
 
 String.prototype.Greater = function (val = undefined) {
@@ -38,9 +38,14 @@ String.prototype.Lesser = function (val = undefined) {
     return `${base} < ${val ? val : "?"}`
 }
 
+String.prototype.Equal = function (val = undefined) {
+    let base = (this === undefined ? "" : this.toString())
+    return `${base} = ${val ? `${val}` : "?"}`
+}
+
 String.prototype.IsNot = function (val = undefined) {
     let base = (this === undefined ? "" : this.toString())
-    return `${base} <> ${val ? val : "?"}`
+    return `${base} <> ${val ? `'${val}'` : "?"}`
 }
 
 String.prototype.IsNull = function () {

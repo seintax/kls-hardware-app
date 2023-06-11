@@ -100,7 +100,7 @@ const del = (name, id) => {
 // query builder for select
 const rec = (table, filter, order, limit) => {
     let condition = table?.conditional ? ` ${table?.conditional}` : ""
-    return `SELECT ${alias(table)} FROM ${table.name}${condition} WHERE ${filter.join(" AND ")}${order ? ` ORDER BY ${order.join(", ")}` : ""}${limit ? ` LIMIT ${limit}` : ""}`
+    return `SELECT ${alias(table)} FROM ${table.name}${condition} WHERE ${filter?.filter(f => f !== undefined)?.join(" AND ")}${order ? ` ORDER BY ${order.join(", ")}` : ""}${limit ? ` LIMIT ${limit}` : ""}`
 }
 
 // query builder for select
@@ -132,7 +132,7 @@ const union = (array, base, order, limit) => {
 }
 
 const optional = (options) => {
-    return `(${options?.join(" OR ")})`
+    return `(${options?.filter(f => f !== undefined)?.join(" OR ")})`
 }
 
 const builder = {
