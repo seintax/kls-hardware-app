@@ -29,7 +29,8 @@ const transaction = {
     // },
     // conditional: 'LEFT JOIN pos_shift_schedule ON shft_id=trns_shift',
     // shiftRecord: `SELECT COUNT(*) + 1 AS code FROM pos_sales_transaction WHERE DATE_FORMAT(trns_date, '%Y-%m-%d')=DATE_FORMAT(now(), '%Y-%m-%d') AND trns_shift=?`,
-    shiftRecord: `SELECT IFNULL(MAX(trns_code), ?) AS code FROM pos_sales_transaction WHERE DATE_FORMAT(trns_date, '%Y-%m-%d')=DATE_FORMAT(now(), '%Y-%m-%d') AND trns_shift=?`,
+    // shiftRecord: `SELECT IFNULL(MAX(trns_code), ?) AS code FROM pos_sales_transaction WHERE DATE_FORMAT(trns_date, '%Y-%m-%d')=DATE_FORMAT(now(), '%Y-%m-%d') AND trns_shift=?`,
+    shiftRecord: `SELECT IFNULL(MAX(trns_code), ?) AS code FROM pos_sales_transaction WHERE trns_code LIKE ?`,
 }
 
 module.exports = {

@@ -58,10 +58,24 @@ const uniqueRecord = async (param, callback) => {
 }
 
 const searchRecord = async (param, callback) => {
-    let { drdate } = table.conversion.fields
-    let helper = query.searchBuilder(param.search, table.conversion)
-    let sql = query.builder.src(table.conversion, helper.filters, [drdate?.Desc()])
-    my.query(sql, helper.parameters, (err, ans) => {
+    // let { drdate } = table.conversion.fields
+    // let helper = query.searchBuilder(param.search, table.conversion)
+    // let sql = query.builder.src(table.conversion, helper.filters, [drdate?.Desc()])
+    let { name, details, drno, supplier, drdate, stocks } = table.conversion.fields
+    let all = stocks?.Greater("0")
+    if (param.all === "Y") all = undefined
+    let options = {
+        parameter: [param.search?.Contains(), param.search?.Contains(), param.search?.Contains(), param.search?.Contains()],
+        filter: [query.optional([
+            name?.Like(),
+            details?.Like(),
+            drno?.Like(),
+            supplier?.Like(),
+        ]), all],
+        order: [drdate?.Desc()]
+    }
+    let sql = query.builder.rec(table.conversion, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
     })

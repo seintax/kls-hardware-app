@@ -59,10 +59,24 @@ const uniqueRecord = async (param, callback) => {
 }
 
 const searchRecord = async (param, callback) => {
-    let { drdate } = table.inventory.fields
-    let helper = query.searchBuilder(param.search, table.inventory)
-    let sql = query.builder.src(table.inventory, helper.filters, [drdate?.Desc()])
-    my.query(sql, helper.parameters, (err, ans) => {
+    // let { drdate } = table.inventory.fields
+    // let helper = query.searchBuilder(param.search, table.inventory)
+    // let sql = query.builder.src(table.inventory, helper.filters, [drdate?.Desc()])
+    let { name, details, drno, supplier, drdate, stocks } = table.inventory.fields
+    let all = stocks?.Greater("0")
+    if (param.all === "Y") all = undefined
+    let options = {
+        parameter: [param.search?.Contains(), param.search?.Contains(), param.search?.Contains(), param.search?.Contains()],
+        filter: [query.optional([
+            name?.Like(),
+            details?.Like(),
+            drno?.Like(),
+            supplier?.Like(),
+        ]), all],
+        order: [drdate?.Desc()]
+    }
+    let sql = query.builder.rec(table.inventory, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
     })
@@ -82,6 +96,20 @@ const associateTable = (param) => {
     }
 }
 
+const libraryRecord = async (param, callback) => {
+    let { name, details, drdate, stocks } = table.inventory.fields
+    let options = {
+        parameter: [param.search?.Contains()],
+        filter: [name?.Like(), stocks?.Greater("0")],
+        order: [name?.Asc(), details?.Asc(), drdate?.Asc()]
+    }
+    let sql = query.builder.rec(table.inventory, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 const availableRecord = async (param, callback) => {
     let { name, details, drdate, stocks } = table.inventory.fields
     let options = {
@@ -98,20 +126,6 @@ const availableRecord = async (param, callback) => {
     let cnv = associateTable(param)
     let union = query.builder.union([inv, cnv], table.inventory.product, ["name".Asc(), "details".Asc(), "drdate".Asc()])
     my.query(union.query, union.parameter, (err, ans) => {
-        if (err) return callback(err)
-        return callback(null, ans)
-    })
-}
-
-const libraryRecord = async (param, callback) => {
-    let { name, details, drdate, stocks } = table.inventory.fields
-    let options = {
-        parameter: [param.search?.Contains()],
-        filter: [name?.Like(), stocks?.Greater("0")],
-        order: [name?.Asc(), details?.Asc(), drdate?.Asc()]
-    }
-    let sql = query.builder.rec(table.inventory, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
     })
