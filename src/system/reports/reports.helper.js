@@ -33,20 +33,19 @@ const reports = {
         `,
     dailySummary: `
         SELECT 
-            DATE(paym_time) AS date,
+            paym_date AS date,
             SUM(IF(paym_method='CASH' AND paym_type='SALES', paym_amount, 0)) AS sales_cash, 
             SUM(IF(paym_method='CHEQUE' AND paym_type='SALES', paym_amount, 0)) AS sales_cheque, 
             SUM(IF(paym_method='GCASH' AND paym_type='SALES', paym_amount, 0)) AS sales_gcash, 
-            (SELECT SUM(trns_net) FROM pos_sales_transaction WHERE trns_method='CREDIT' AND trns_date=DATE(paym_time) GROUP BY trns_date) AS sales_credit,
-            SUM(IF(paym_method='CASH' AND paym_type='CREDIT', paym_amount, 0)) AS credit_cash, 
+            (SELECT SUM(trns_net) FROM pos_sales_transaction WHERE trns_method='CREDIT' AND trns_date=paym_date GROUP BY trns_date) AS sales_credit,
+            SUM(IF(paym_method='CASH' AND paym_type='CREDIT', paym_amount, 0)) AS credit_cash,
             SUM(IF(paym_method='CHEQUE' AND paym_type='CREDIT', paym_amount, 0)) AS credit_cheque, 
             SUM(IF(paym_method='GCASH' AND paym_type='CREDIT', paym_amount, 0)) AS credit_gcash 
-        FROM 
-            pos_payment_collection 
-        WHERE 
-            DATE(paym_time) BETWEEN '@fr' AND '@to'
-        GROUP BY DATE(paym_time)
-        ORDER BY DATE(paym_time) DESC
+        FROM
+            (SELECT *,DATE(paym_time) AS paym_date FROM pos_payment_collection WHERE
+            paym_time BETWEEN '@fr 00:00:01' AND '@to 23:59:59') arg
+        GROUP BY paym_date
+        ORDER BY paym_date DESC;
         `
 }
 
