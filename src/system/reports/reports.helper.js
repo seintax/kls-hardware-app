@@ -37,14 +37,12 @@ const reports = {
             SUM(IF(paym_method='CASH' AND paym_type='SALES', paym_amount, 0)) AS sales_cash, 
             SUM(IF(paym_method='CHEQUE' AND paym_type='SALES', paym_amount, 0)) AS sales_cheque, 
             SUM(IF(paym_method='GCASH' AND paym_type='SALES', paym_amount, 0)) AS sales_gcash, 
-            sales_credit,
+            (SELECT SUM(trns_net) FROM pos_sales_transaction WHERE trns_method='CREDIT' AND trns_date=DATE(paym_time) GROUP BY trns_date) AS sales_credit,
             SUM(IF(paym_method='CASH' AND paym_type='CREDIT', paym_amount, 0)) AS credit_cash, 
             SUM(IF(paym_method='CHEQUE' AND paym_type='CREDIT', paym_amount, 0)) AS credit_cheque, 
             SUM(IF(paym_method='GCASH' AND paym_type='CREDIT', paym_amount, 0)) AS credit_gcash 
         FROM 
             pos_payment_collection 
-                INNER JOIN (SELECT trns_date,SUM(trns_net) AS sales_credit FROM pos_sales_transaction WHERE trns_method='CREDIT' GROUP BY trns_date) a
-                    ON a.trns_date=DATE(paym_time)
         WHERE 
             DATE(paym_time) BETWEEN '@fr' AND '@to'
         GROUP BY DATE(paym_time)
