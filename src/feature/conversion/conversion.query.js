@@ -61,7 +61,7 @@ const searchRecord = async (param, callback) => {
     // let { drdate } = table.conversion.fields
     // let helper = query.searchBuilder(param.search, table.conversion)
     // let sql = query.builder.src(table.conversion, helper.filters, [drdate?.Desc()])
-    let { name, details, drno, supplier, drdate, stocks } = table.conversion.fields
+    let { name, details, drno, supplier, drdate, stocks, id } = table.conversion.fields
     let all = stocks?.Greater("0")
     if (param.all === "Y") all = undefined
     let options = {
@@ -72,7 +72,7 @@ const searchRecord = async (param, callback) => {
             drno?.Like(),
             supplier?.Like(),
         ]), all],
-        order: [drdate?.Desc()]
+        order: [id?.Desc()]
     }
     let sql = query.builder.rec(table.conversion, options.filter, options.order)
     my.query(sql, options.parameter, (err, ans) => {
