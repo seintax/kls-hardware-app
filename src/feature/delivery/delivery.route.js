@@ -83,4 +83,16 @@ router.patch('/delivery/balance', async (req, res) => {
     })
 })
 
+router.get('/delivery/supplier', async (req, res) => {
+    await service.supplierRecord(req.query, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
 module.exports = router

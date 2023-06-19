@@ -126,7 +126,21 @@ const codeRecord = async (param, callback) => {
     let { code, id } = table.transaction.fields
     let options = {
         parameter: [param.code?.Exact()],
-        filter: [code?.Like()],
+        filter: [code?.Is()],
+        order: [id?.Asc()]
+    }
+    let sql = query.builder.rec(table.transaction, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
+const schedRecord = async (param, callback) => {
+    let { shift, id } = table.transaction.fields
+    let options = {
+        parameter: [param.shift?.Exact()],
+        filter: [shift?.Is()],
         order: [id?.Asc()]
     }
     let sql = query.builder.rec(table.transaction, options.filter, options.order)
@@ -147,5 +161,6 @@ module.exports = {
     readyRecord,
     loggedRecord,
     slipnoRecord,
-    codeRecord
+    codeRecord,
+    schedRecord
 }
