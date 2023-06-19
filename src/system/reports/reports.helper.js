@@ -26,7 +26,7 @@ const reports = {
         FROM 
             pos_payment_collection 
                 LEFT JOIN pos_sales_transaction 
-                    ON trns_code = paym_trans
+                    ON trns_code = paym_trans 
         WHERE 
             DATE(paym_time) BETWEEN '@fr' AND '@to' 
         ORDER BY DATE(paym_time) DESC
@@ -37,7 +37,14 @@ const reports = {
             SUM(IF(paym_method='CASH' AND paym_type='SALES', paym_amount, 0)) AS sales_cash, 
             SUM(IF(paym_method='CHEQUE' AND paym_type='SALES', paym_amount, 0)) AS sales_cheque, 
             SUM(IF(paym_method='GCASH' AND paym_type='SALES', paym_amount, 0)) AS sales_gcash, 
-            (SELECT SUM(trns_net) FROM pos_sales_transaction WHERE trns_method='CREDIT' AND trns_date=paym_date GROUP BY trns_date) AS sales_credit,
+            (SELECT 
+                SUM(trns_net) 
+            FROM 
+                pos_sales_transaction 
+            WHERE 
+                trns_method='CREDIT' AND 
+                trns_date=paym_date 
+            GROUP BY trns_date) AS sales_credit,
             SUM(IF(paym_method='CASH' AND paym_type='CREDIT', paym_amount, 0)) AS credit_cash,
             SUM(IF(paym_method='CHEQUE' AND paym_type='CREDIT', paym_amount, 0)) AS credit_cheque, 
             SUM(IF(paym_method='GCASH' AND paym_type='CREDIT', paym_amount, 0)) AS credit_gcash 

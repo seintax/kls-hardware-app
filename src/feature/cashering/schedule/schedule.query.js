@@ -89,6 +89,124 @@ const startRecord = async (param, callback) => {
     })
 }
 
+const accountRecord = async (param, callback) => {
+    let { account, id } = table.schedule.fields
+    let options = {
+        parameter: [param.id?.Exact()],
+        filter: [account?.Is()],
+        order: [id?.Desc()]
+    }
+    let sql = query.builder.rec(table.schedule, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
+const transferRecord = async (param, callback) => {
+    let error = 0
+    let batch = await Promise.all(param?.trans.map(async item => {
+        let payment = await new Promise((resolve, reject) => {
+            let sql = table.schedule.transferUpdate.payment
+                .replace("@new", item.new)
+                .replace("@sto", item.sto)
+                .replace("@old", item.old)
+            my.query(sql, async (err, ans) => {
+                if (err) {
+                    error++
+                    return reject(err)
+                }
+                resolve({ success: true, response: ans })
+            })
+        })
+        let reimburse = await new Promise((resolve, reject) => {
+            let sql = table.schedule.transferUpdate.reimburse
+                .replace("@new", item.new)
+                .replace("@sto", item.sto)
+                .replace("@old", item.old)
+            my.query(sql, async (err, ans) => {
+                if (err) {
+                    error++
+                    return reject(err)
+                }
+                resolve({ success: true, response: ans })
+            })
+        })
+        let returnitems = await new Promise((resolve, reject) => {
+            let sql = table.schedule.transferUpdate.returnitems
+                .replace("@new", item.new)
+                .replace("@old", item.old)
+            my.query(sql, async (err, ans) => {
+                if (err) {
+                    error++
+                    return reject(err)
+                }
+                resolve({ success: true, response: ans })
+            })
+        })
+        let returnrequest = await new Promise((resolve, reject) => {
+            let sql = table.schedule.transferUpdate.returnrequest
+                .replace("@new", item.new)
+                .replace("@sto", item.sto)
+                .replace("@old", item.old)
+            my.query(sql, async (err, ans) => {
+                if (err) {
+                    error++
+                    return reject(err)
+                }
+                resolve({ success: true, response: ans })
+            })
+        })
+        let credit = await new Promise((resolve, reject) => {
+            let sql = table.schedule.transferUpdate.credit
+                .replace("@new", item.new)
+                .replace("@old", item.old)
+            my.query(sql, async (err, ans) => {
+                if (err) {
+                    error++
+                    return reject(err)
+                }
+                resolve({ success: true, response: ans })
+            })
+        })
+        let dispensed = await new Promise((resolve, reject) => {
+            let sql = table.schedule.transferUpdate.dispensed
+                .replace("@new", item.new)
+                .replace("@old", item.old)
+            my.query(sql, async (err, ans) => {
+                if (err) {
+                    error++
+                    return reject(err)
+                }
+                resolve({ success: true, response: ans })
+            })
+        })
+        let transaction = await new Promise((resolve, reject) => {
+            let sql = table.schedule.transferUpdate.transaction
+                .replace("@new", item.new)
+                .replace("@sto", item.sto)
+                .replace("@old", item.old)
+            my.query(sql, async (err, ans) => {
+                if (err) {
+                    error++
+                    return reject(err)
+                }
+                resolve({ success: true, response: ans })
+            })
+        })
+        return {
+            payment,
+            reimburse,
+            returnitems,
+            returnrequest,
+            credit,
+            dispensed,
+            transaction,
+        }
+    }))
+    return callback(null, { errors: error, data: batch })
+}
+
 module.exports = {
     createRecord,
     updateRecord,
@@ -97,5 +215,7 @@ module.exports = {
     uniqueRecord,
     searchRecord,
     balanceRecord,
-    startRecord
+    startRecord,
+    accountRecord,
+    transferRecord
 }

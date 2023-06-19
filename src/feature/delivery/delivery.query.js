@@ -76,6 +76,20 @@ const balanceRecord = async (param, callback) => {
     })
 }
 
+const supplierRecord = async (param, callback) => {
+    let { supplier, drno, date } = table.delivery.fields
+    let options = {
+        parameter: [param.supplier?.Exact()],
+        filter: [supplier?.Is()],
+        order: [date?.Desc(), drno?.Desc()]
+    }
+    let sql = query.builder.rec(table.delivery, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 module.exports = {
     createRecord,
     updateRecord,
@@ -83,5 +97,6 @@ module.exports = {
     selectRecord,
     uniqueRecord,
     searchRecord,
-    balanceRecord
+    balanceRecord,
+    supplierRecord
 }
