@@ -21,9 +21,7 @@ const transported = {
         drno: 'invt_drno',
         drdate: 'invt_drdate',
         received: 'invt_received',
-        cost: 'invt_cost',
         stocks: 'invt_stocks',
-        price: 'invt_price',
     },
     conditional: 'LEFT JOIN pos_stock_inventory ON invt_id=trni_item LEFT JOIN pos_stock_masterlist ON prod_id=trni_product'
 }
