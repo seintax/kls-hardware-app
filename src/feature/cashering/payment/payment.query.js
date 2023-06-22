@@ -116,7 +116,7 @@ const chequeRecord = async (param, callback) => {
     let { method, refdate } = table.payment.fields
     let options = {
         parameter: [],
-        filter: [method?.Is("CHEQUE".Qoute())],
+        filter: [method?.Is("CHEQUE")],
         order: [refdate?.Desc()]
     }
     let sql = query.builder.rec(table.payment, options.filter, options.order)
