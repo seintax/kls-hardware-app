@@ -72,7 +72,7 @@ router.get('/transported/search', async (req, res) => {
 })
 
 router.get('/transported/transfer', async (req, res) => {
-    await service.inventoryRecord(req.query, (err, ans) => {
+    await service.transferRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err
         })
