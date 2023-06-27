@@ -83,7 +83,7 @@ router.get('/conversion/search', async (req, res) => {
     })
 })
 
-router.get('/conversion/delivery', async (req, res) => {
+router.get('/conversion/inventory', async (req, res) => {
     await service.inventoryRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err
