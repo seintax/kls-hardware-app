@@ -67,13 +67,27 @@ const searchRecord = async (param, callback) => {
     })
 }
 
-const inventoryRecord = async (param, callback) => {
+const transferRecord = async (param, callback) => {
     let { reference } = table.transported.fields
     let { name } = table.transported.joined
     let options = {
         parameter: [param.id],
         filter: [reference?.Is()],
         order: [name?.Asc()]
+    }
+    let sql = query.builder.rec(table.transported, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
+const inventoryRecord = async (param, callback) => {
+    let { item, id } = table.transported.fields
+    let options = {
+        parameter: [param.item],
+        filter: [item?.Is()],
+        order: [id?.Asc()]
     }
     let sql = query.builder.rec(table.transported, options.filter, options.order)
     my.query(sql, options.parameter, (err, ans) => {
@@ -89,5 +103,6 @@ module.exports = {
     selectRecord,
     uniqueRecord,
     searchRecord,
+    transferRecord,
     inventoryRecord
 }
