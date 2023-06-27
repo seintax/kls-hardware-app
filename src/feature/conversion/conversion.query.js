@@ -96,11 +96,11 @@ const availableRecord = async (param, callback) => {
 }
 
 const inventoryRecord = async (param, callback) => {
-    let { name, reference } = table.conversion.fields
+    let { item, id } = table.conversion.fields
     let options = {
-        parameter: [param.id],
-        filter: [reference?.Is()],
-        order: [name?.Asc()]
+        parameter: [param.item],
+        filter: [item?.Is()],
+        order: [id?.Asc()]
     }
     let sql = query.builder.rec(table.conversion, options.filter, options.order)
     my.query(sql, options.parameter, (err, ans) => {
