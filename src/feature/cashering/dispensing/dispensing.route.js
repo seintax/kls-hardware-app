@@ -107,4 +107,16 @@ router.patch('/cashering/dispensing/request', async (req, res) => {
     })
 })
 
+router.get('/cashering/dispensing/inventory', async (req, res) => {
+    await service.inventoryRecord(req.query, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
 module.exports = router
