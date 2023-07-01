@@ -71,6 +71,18 @@ router.get('/cashering/credits/search', async (req, res) => {
     })
 })
 
+router.get('/cashering/credits/customer', async (req, res) => {
+    await service.customerRecord(req.query, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
 router.get('/cashering/credits/ongoing', async (req, res) => {
     await service.ongoingRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
@@ -83,8 +95,8 @@ router.get('/cashering/credits/ongoing', async (req, res) => {
     })
 })
 
-router.get('/cashering/credits/transaction', async (req, res) => {
-    await service.transactionRecord(req.query, (err, ans) => {
+router.patch('/cashering/credits/return', async (req, res) => {
+    await service.returnRecord(req.body, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err
         })
@@ -95,8 +107,8 @@ router.get('/cashering/credits/transaction', async (req, res) => {
     })
 })
 
-router.patch('/cashering/credits/return', async (req, res) => {
-    await service.returnRecord(req.body, (err, ans) => {
+router.get('/cashering/credits/transaction', async (req, res) => {
+    await service.transactionRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err
         })

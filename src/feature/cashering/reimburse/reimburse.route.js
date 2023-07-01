@@ -71,4 +71,16 @@ router.get('/cashering/reimburse/search', async (req, res) => {
     })
 })
 
+router.get('/cashering/reimburse/transaction', async (req, res) => {
+    await service.transactionRecord(req.query, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
 module.exports = router
