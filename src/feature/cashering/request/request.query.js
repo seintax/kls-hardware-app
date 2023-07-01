@@ -67,7 +67,7 @@ const searchRecord = async (param, callback) => {
     })
 }
 
-const transactionRecord = async (param, callback) => {
+const progressRecord = async (param, callback) => {
     let { code, status, id } = table.request.fields
     let options = {
         parameter: [param.code?.Exact(), param.status?.Contains()],
@@ -97,6 +97,20 @@ const statusRecord = async (param, callback) => {
     })
 }
 
+const transactionRecord = async (param, callback) => {
+    let { code, id } = table.request.fields
+    let options = {
+        parameter: [param.code?.Exact()],
+        filter: [code?.Is()],
+        order: [id?.Asc()]
+    }
+    let sql = query.builder.rec(table.request, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 module.exports = {
     createRecord,
     updateRecord,
@@ -104,6 +118,7 @@ module.exports = {
     selectRecord,
     uniqueRecord,
     searchRecord,
-    transactionRecord,
-    statusRecord
+    progressRecord,
+    statusRecord,
+    transactionRecord
 }

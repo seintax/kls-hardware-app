@@ -67,11 +67,26 @@ const searchRecord = async (param, callback) => {
     })
 }
 
+const transactionRecord = async (param, callback) => {
+    let { code, id } = table.reimburse.fields
+    let options = {
+        parameter: [param.code?.Exact()],
+        filter: [code?.Is()],
+        order: [id?.Asc()]
+    }
+    let sql = query.builder.rec(table.reimburse, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 module.exports = {
     createRecord,
     updateRecord,
     deleteRecord,
     selectRecord,
     uniqueRecord,
-    searchRecord
+    searchRecord,
+    transactionRecord
 }

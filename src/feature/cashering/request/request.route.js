@@ -71,8 +71,8 @@ router.get('/cashering/request/search', async (req, res) => {
     })
 })
 
-router.get('/cashering/request/transaction', async (req, res) => {
-    await service.transactionRecord(req.query, (err, ans) => {
+router.get('/cashering/request/progress', async (req, res) => {
+    await service.progressRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err
         })
@@ -85,6 +85,18 @@ router.get('/cashering/request/transaction', async (req, res) => {
 
 router.get('/cashering/request/forstatus', async (req, res) => {
     await service.statusRecord(req.query, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
+router.get('/cashering/request/transaction', async (req, res) => {
+    await service.transactionRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err
         })

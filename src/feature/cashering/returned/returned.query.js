@@ -96,6 +96,20 @@ const inventoryRecord = async (param, callback) => {
     })
 }
 
+const transactionRecord = async (param, callback) => {
+    let { code, id } = table.returned.fields
+    let options = {
+        parameter: [param.code?.Exact()],
+        filter: [code?.Is()],
+        order: [id?.Asc()]
+    }
+    let sql = query.builder.rec(table.returned, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 module.exports = {
     createRecord,
     updateRecord,
@@ -104,5 +118,6 @@ module.exports = {
     uniqueRecord,
     searchRecord,
     batchRecord,
-    inventoryRecord
+    inventoryRecord,
+    transactionRecord
 }
