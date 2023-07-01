@@ -29,7 +29,7 @@ const reports = {
                     ON trns_code = paym_trans 
         WHERE 
             DATE(paym_time) BETWEEN '@fr' AND '@to' 
-        ORDER BY DATE(paym_time) DESC
+        ORDER BY trns_code DESC
         `,
     dailySummary: `
         SELECT 
