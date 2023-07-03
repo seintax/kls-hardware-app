@@ -83,6 +83,18 @@ router.get('/account/login', async (req, res) => {
     })
 })
 
+router.get('/account/logas', async (req, res) => {
+    await service.loginAsRecord(req.query, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
 router.get('/account/token', async (req, res) => {
     await service.tokenRecord(req.query, (err, ans) => {
         if (err) return res.status(200).json({
