@@ -127,6 +127,33 @@ const loginRecord = async (param, callback) => {
             })
         })
     })
+    await new Promise((resolve, reject) => {
+        my.query(table.account.loggedUpdate, [param.user], async (err, ans) => {
+            if (err) return reject(err)
+            resolve(ans)
+        })
+    })
+    return callback(null, credential)
+}
+
+const loginAsRecord = async (param, callback) => {
+    let credential = await new Promise((resolve, reject) => {
+        let { user, pass } = table.account.fields
+        let options = {
+            parameter: [param.user?.Exact(), decryptToken(param.pass)?.Exact()],
+            filter: [user?.Is(), pass?.Is()],
+            order: [user?.Asc()]
+        }
+        let sql = query.builder.rec(table.account, options.filter, options.order)
+        my.query(sql, options.parameter, (err, ans) => {
+            if (err) return reject(err)
+            resolve({
+                id: ans[0]?.id,
+                name: ans[0]?.name,
+                token: ans[0]?.token,
+            })
+        })
+    })
     return callback(null, credential)
 }
 
@@ -152,5 +179,6 @@ module.exports = {
     uniqueRecord,
     searchRecord,
     loginRecord,
-    tokenRecord
+    tokenRecord,
+    loginAsRecord,
 }
