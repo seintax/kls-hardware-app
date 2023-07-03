@@ -20,7 +20,8 @@ const account = {
         display: 'user_display',
     },
     conditional: 'LEFT JOIN sys_user ON user_account=acct_id',
-    tokenUpdate: 'UPDATE sys_account SET acct_keytoken=? WHERE acct_username = ?'
+    tokenUpdate: 'UPDATE sys_account SET acct_keytoken=? WHERE acct_username = ?',
+    loggedUpdate: 'UPDATE sys_account SET acct_duration=now() WHERE acct_username = ?'
 }
 
 module.exports = {
