@@ -213,6 +213,14 @@ const balanceRecord = async (param, callback) => {
     })
 }
 
+const stocksRecord = async (param, callback) => {
+    let sql = table.inventory.stocksUpdate
+    my.query(sql, [param.id], async (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
 module.exports = {
     createRecord,
     updateRecord,
@@ -227,5 +235,6 @@ module.exports = {
     batchRecord,
     returnRecord,
     balanceRecord,
-    libraryRecord
+    libraryRecord,
+    stocksRecord
 }
