@@ -66,21 +66,55 @@ const inventory = {
     stocksUpdate: `
         UPDATE pos_stock_inventory SET 
             invt_stocks=invt_received - (
-
-                    (
-                        SELECT IFNULL(SUM(sale_dispense),0) 
-                        FROM pos_sales_dispensing 
-                        WHERE sale_item=invt_id
-                    ) + (
-                        SELECT IFNULL(SUM(trni_qty),0) 
-                        FROM pos_stock_transfer_item 
-                        WHERE trni_item=invt_id
-                    ) + (
-                        SELECT IFNULL(SUM(conv_item_qty),0) 
-                        FROM pos_stock_conversion 
-                        WHERE conv_item=invt_id    
-                    )
-                ) 
+                (
+                    SELECT IFNULL(SUM(sale_dispense),0) 
+                    FROM pos_sales_dispensing 
+                    WHERE sale_item=invt_id
+                ) + (
+                    SELECT IFNULL(SUM(trni_qty),0) 
+                    FROM pos_stock_transfer_item 
+                    WHERE trni_item=invt_id
+                ) + (
+                    SELECT IFNULL(SUM(conv_item_qty),0) 
+                    FROM pos_stock_conversion 
+                    WHERE conv_item=invt_id    
+                )
+            ),
+            invt_conv_count=(
+                SELECT IFNULL(COUNT(*),0) 
+                FROM pos_stock_conversion 
+                WHERE conv_item=invt_id
+            ),
+            invt_conv_value=(
+                SELECT IFNULL(SUM(conv_item_qty * invt_price),0) 
+                FROM pos_stock_conversion 
+                WHERE conv_item=invt_id
+            ),
+            invt_conv_total=(
+                SELECT IFNULL(SUM(conv_item_qty),0) 
+                FROM pos_stock_conversion 
+                WHERE conv_item=invt_id
+            ), 
+            invt_trni_count=(
+                SELECT IFNULL(COUNT(*),0) 
+                FROM pos_stock_transfer_item 
+                WHERE trni_item=invt_id
+            ),
+            invt_trni_value=(
+                SELECT IFNULL(SUM(trni_qty * trni_price),0) 
+                FROM pos_stock_transfer_item 
+                WHERE trni_item=invt_id
+            ),
+            invt_trni_total=(
+                SELECT IFNULL(SUM(trni_qty),0) 
+                FROM pos_stock_transfer_item 
+                WHERE trni_item=invt_id
+            ), 
+            invt_sold_total=(
+                SELECT IFNULL(SUM(sale_dispense),0) 
+                FROM pos_sales_dispensing 
+                WHERE sale_item=invt_id
+            )  
         WHERE invt_id = ?
         `,
     balanceUpdate: `
