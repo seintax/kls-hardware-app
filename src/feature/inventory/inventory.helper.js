@@ -63,6 +63,26 @@ const inventory = {
     //     category: "prod_category",
     // },
     // conditional: 'LEFT JOIN pos_stock_masterlist ON prod_id=invt_product',
+    stocksUpdate: `
+        UPDATE pos_stock_inventory SET 
+            invt_stocks=invt_received - (
+
+                    (
+                        SELECT IFNULL(SUM(sale_dispense),0) 
+                        FROM pos_sales_dispensing 
+                        WHERE sale_item=invt_id
+                    ) + (
+                        SELECT IFNULL(SUM(trni_qty),0) 
+                        FROM pos_stock_transfer_item 
+                        WHERE trni_item=invt_id
+                    ) + (
+                        SELECT IFNULL(SUM(conv_item_qty),0) 
+                        FROM pos_stock_conversion 
+                        WHERE conv_item=invt_id    
+                    )
+                ) 
+        WHERE invt_id = ?
+        `,
     balanceUpdate: `
         UPDATE pos_stock_inventory SET 
             invt_conv_count=(SELECT IFNULL(COUNT(*),0) FROM pos_stock_conversion WHERE conv_item=invt_id),
