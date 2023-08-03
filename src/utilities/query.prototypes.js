@@ -53,7 +53,7 @@ String.prototype.IsNull = function () {
     return `${base} IS NULL`
 }
 
-String.prototype.IsNot = function () {
+String.prototype.IsNotNull = function () {
     let base = (this === undefined ? "" : this.toString())
     return `${base} IS NOT NULL`
 }
