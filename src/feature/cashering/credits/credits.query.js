@@ -68,11 +68,27 @@ const searchRecord = async (param, callback) => {
 }
 
 const customerRecord = async (param, callback) => {
-    let { customer, status, balance, id } = table.credits.fields
+    let { customer, code, status, balance, id } = table.credits.fields
+    let { ordno } = table.credits.joined
     let options = {
-        parameter: [param.customer?.Exact(), "ON-GOING"],
-        filter: [customer?.Is(), status?.Is(), balance?.Greater("0")],
+        parameter: [param.customer?.Exact(), param.search?.Contains(), param.search?.Contains(), "ON-GOING"],
+        filter: [customer?.Is(), query.optional([code?.Like(), ordno?.Like()]), status?.Is(), balance?.Greater("0")],
         order: [id?.Asc()]
+    }
+    let sql = query.builder.rec(table.credits, options.filter, options.order)
+    my.query(sql, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, ans)
+    })
+}
+
+const settledRecord = async (param, callback) => {
+    let { customer, code, status, id } = table.credits.fields
+    let { ordno } = table.credits.joined
+    let options = {
+        parameter: [param.customer?.Exact(), param.search?.Contains(), param.search?.Contains(), param.search?.Contains(), "ON-GOING"],
+        filter: [customer?.Is(), query.optional([code?.Like(), ordno?.Like(), status?.Like()]), status?.IsNot()],
+        order: [code?.Asc(), id?.Asc()]
     }
     let sql = query.builder.rec(table.credits, options.filter, options.order)
     my.query(sql, options.parameter, (err, ans) => {
@@ -128,6 +144,7 @@ module.exports = {
     searchRecord,
     customerRecord,
     ongoingRecord,
+    settledRecord,
     returnRecord,
     transactionRecord
 }

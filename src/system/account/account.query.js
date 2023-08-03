@@ -179,6 +179,6 @@ module.exports = {
     uniqueRecord,
     searchRecord,
     loginRecord,
-    tokenRecord,
     loginAsRecord,
+    tokenRecord
 }

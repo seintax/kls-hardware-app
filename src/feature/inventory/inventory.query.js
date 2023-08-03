@@ -236,5 +236,5 @@ module.exports = {
     returnRecord,
     balanceRecord,
     libraryRecord,
-    stocksRecord
+    stocksRecord,
 }
