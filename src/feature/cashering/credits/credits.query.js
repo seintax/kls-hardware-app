@@ -93,7 +93,7 @@ const settledRecord = async (param, callback) => {
     let sql = query.builder.rec(table.credits, options.filter, options.order)
     my.query(sql, options.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans, sql)
+        return callback(null, ans)
     })
 }
 
