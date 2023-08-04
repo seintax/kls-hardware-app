@@ -69,7 +69,7 @@ const inventory = {
                 (
                     SELECT IFNULL(SUM(sale_dispense),0) 
                     FROM pos_sales_dispensing 
-                    WHERE sale_item=invt_id
+                    WHERE sale_item=invt_id AND sale_conv=0
                 ) + (
                     SELECT IFNULL(SUM(trni_qty),0) 
                     FROM pos_stock_transfer_item 
@@ -113,7 +113,7 @@ const inventory = {
             invt_sold_total=(
                 SELECT IFNULL(SUM(sale_dispense),0) 
                 FROM pos_sales_dispensing 
-                WHERE sale_item=invt_id
+                WHERE sale_item=invt_id AND sale_conv=0
             )  
         WHERE invt_id = ?
         `,
