@@ -119,4 +119,16 @@ router.get('/cashering/dispensing/inventory', async (req, res) => {
     })
 })
 
+router.post('/cashering/dispensing/migrate', async (req, res) => {
+    await service.migrateRecord(req.body, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
 module.exports = router
