@@ -1,16 +1,1 @@
-20230530	04:54:41	47f3fa16-a15b-4b28-ac04-9135bb52f4a7	OPTIONS	/feature/supplier/search	https://jbshardware.jally.company
-20230530	04:54:41	1d69c6e7-095d-4830-a130-074692cf5395	GET	/feature/supplier/search	https://jbshardware.jally.company
-20230530	04:54:42	dd57de04-7598-4458-b66b-3d8ceec9ef07	OPTIONS	/feature/supplier/search	https://jbshardware.jally.company
-20230530	04:54:42	dc029626-42a4-4519-ab8d-29adcad0faa2	GET	/feature/supplier/search	https://jbshardware.jally.company
-20230530	04:54:44	25831994-e7e7-4c28-af55-02c9468345ec	OPTIONS	/feature/supplier/search	https://jbshardware.jally.company
-20230530	04:54:44	3c7ea84e-8620-4e9b-a8ff-9b4ba60b2d40	GET	/feature/supplier/search	https://jbshardware.jally.company
-20230605	09:45:41	b291e599-3ea3-4ddb-879c-2e3d844a37e5	OPTIONS	/custom/cashering/schedule/start?id=1	https://jbshardware.jally.company
-20230605	09:45:41	dbe12b81-3497-4c82-8351-2dff01e288cf	GET	/custom/cashering/schedule/start?id=1	https://jbshardware.jally.company
-20230605	09:45:41	e9332307-926c-414e-b842-60da14d2bab9	OPTIONS	/feature/masterlist/search	https://jbshardware.jally.company
-20230605	09:45:41	40523fe7-bc44-4ddb-b485-7ea7b52c05da	GET	/feature/masterlist/search	https://jbshardware.jally.company
-20230605	09:46:49	77ec95c1-5323-4a24-b4bf-9df2c729308f	OPTIONS	/feature/delivery/search	https://jbshardware.jally.company
-20230605	09:46:49	6bd55b1d-1d74-44e9-a847-2d2054803ecd	GET	/feature/delivery/search	https://jbshardware.jally.company
-20230605	09:46:53	77c3b099-4a33-4cf9-bf99-76d84ac33f5c	OPTIONS	/feature/delivery/search?search=mega	https://jbshardware.jally.company
-20230605	09:46:53	1f8a4458-79be-4166-8322-8e155b0dfcfe	GET	/feature/delivery/search?search=mega	https://jbshardware.jally.company
-20230605	09:46:56	330b4f18-7fed-4673-8de6-0af494e66af0	OPTIONS	/feature/delivery/search?search=	https://jbshardware.jally.company
-20230605	09:46:56	f7f1d752-3f11-4012-9e9b-8a8220bd9466	GET	/feature/delivery/search?search=	https://jbshardware.jally.company
+
