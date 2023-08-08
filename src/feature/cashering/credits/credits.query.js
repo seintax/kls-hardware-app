@@ -135,6 +135,23 @@ const transactionRecord = async (param, callback) => {
     })
 }
 
+const migrateRecord = async (param, callback) => {
+    // console.log(param.data)
+    let batch = await Promise.all(param.data?.map(async item => {
+        let response = await new Promise(async (resolve, reject) => {
+            let helper = query.migrateBuilder(item, table.credits)
+            let sql = query.builder.add(table.credits.name, helper.create.fields, helper.create.values)
+            // return resolve({ sql, param: helper.parameters })
+            await my.query(sql, helper.parameters, async (err, ans) => {
+                if (err) return resolve({ error: err })
+                return resolve({ id: ans['insertId'] })
+            })
+        })
+        return response
+    }))
+    return callback(null, batch)
+}
+
 module.exports = {
     createRecord,
     updateRecord,
@@ -146,5 +163,6 @@ module.exports = {
     ongoingRecord,
     settledRecord,
     returnRecord,
-    transactionRecord
+    transactionRecord,
+    migrateRecord
 }
