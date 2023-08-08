@@ -1,5 +1,27 @@
 require("./../../src/utilities/string.prototypes")
 
+
+const migrateBuilder = (parameter, table) => {
+    const parameters = []
+    const fields = []
+    const values = []
+    for (const prop in parameter) {
+        if (parameter[prop]) {
+            parameters.push(parameter[prop])
+            fields.push(prop)
+            values.push("?")
+        }
+    }
+    return {
+        tablename: table.name,
+        parameters: parameters,
+        create: {
+            fields: fields.join(", "),
+            values: values.join(", ")
+        }
+    }
+}
+
 const createBuilder = (parameter, table) => {
     const parameters = []
     const fields = []
@@ -149,6 +171,7 @@ module.exports = {
     createBuilder,
     updateBuilder,
     searchBuilder,
+    migrateBuilder,
     optional,
     builder,
 }

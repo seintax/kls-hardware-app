@@ -10,6 +10,7 @@ const mysql = require('mysql')
 //     connectionLimit: 10,
 //     queueLimit: 0
 // })
+
 // development environment
 // var my = mysql.createPool('mysql://ql4nryngt7llnxn6c2gq:pscale_pw_xhSDbUrfZUh1lFznu8jyaW18pvuYR8BrQ0cuOEssIag@aws.connect.psdb.cloud/app-jbs-hpos?ssl={"rejectUnauthorized":true}')
 

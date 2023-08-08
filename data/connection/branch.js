@@ -1,8 +1,8 @@
 const mysql = require('mysql')
 
-var cl = mysql.createPool('mysql://e0wmy46upo7a2d3rdh61:pscale_pw_Wtyj2B8FXVu1JpZapP6zXrfL1wS4VFMsTgXeKDHbAkD@aws.connect.psdb.cloud/app-jbs-hpos?ssl={"rejectUnauthorized":true}')
+var br = mysql.createPool('mysql://ql4nryngt7llnxn6c2gq:pscale_pw_xhSDbUrfZUh1lFznu8jyaW18pvuYR8BrQ0cuOEssIag@aws.connect.psdb.cloud/app-jbs-hpos?ssl={"rejectUnauthorized":true}')
 
-cl.getConnection((err, con) => {
+br.getConnection((err, con) => {
     if (err) {
         console.log(`\x1b[41m`, `ERROR`, '\x1b[0m', `Failed to load server @ ${process.env.MY_SERVER}/${process.env.MY_DATABASE}`)
         if (err.code === 'PROTOCOL_CONNECTION_LOST') {
@@ -19,10 +19,10 @@ cl.getConnection((err, con) => {
         }
     }
     else {
-        console.log(`\x1b[43m`, `CLOUD`, '\x1b[0m', `@ planetscale/app-jbs-hpos:production\n`)
+        console.log(`\x1b[43m`, `BRANCH`, '\x1b[0m', `@ planetscale/app-jbs-hpos:development\n`)
     }
     if (con) con.release()
     return
 })
 
-module.exports = cl
+module.exports = br
