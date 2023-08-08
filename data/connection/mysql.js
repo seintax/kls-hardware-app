@@ -17,8 +17,6 @@ const mysql = require('mysql')
 // production environment
 var my = mysql.createPool('mysql://e0wmy46upo7a2d3rdh61:pscale_pw_Wtyj2B8FXVu1JpZapP6zXrfL1wS4VFMsTgXeKDHbAkD@aws.connect.psdb.cloud/app-jbs-hpos?ssl={"rejectUnauthorized":true}')
 
-console.log(my)
-
 my.getConnection((err, con) => {
     if (err) {
         console.log(`\x1b[41m`, `ERROR`, '\x1b[0m', `Failed to load server @ ${process.env.MY_SERVER}/${process.env.MY_DATABASE}`)
