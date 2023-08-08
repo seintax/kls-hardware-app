@@ -1,7 +1,4 @@
 node_modules
 .env
-data/
-connection/
-files
-logs
-*.log
+logs/
+data/connection/mysql.js
