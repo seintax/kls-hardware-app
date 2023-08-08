@@ -1,0 +1,8 @@
+20230530	04:54:41	6565310b-8c3d-4546-92ec-afe8be0145bf	Error: Not allowed by CORS.	OPTIONS	/feature/supplier/search	https://jbshardware.jally.company
+20230530	04:54:41	e0080b4a-0229-48b9-80b4-be75886bc48e	Error: Not allowed by CORS.	GET	/feature/supplier/search	https://jbshardware.jally.company
+20230530	04:54:42	496e4759-a0f2-412d-beaa-46249c3699c9	Error: Not allowed by CORS.	OPTIONS	/feature/supplier/search	https://jbshardware.jally.company
+20230530	04:54:42	4f544e2d-13a5-4de4-9140-396d4644ecae	Error: Not allowed by CORS.	GET	/feature/supplier/search	https://jbshardware.jally.company
+20230530	04:54:44	34d847dd-e90d-4f47-9891-8b4b861e0408	Error: Not allowed by CORS.	OPTIONS	/feature/supplier/search	https://jbshardware.jally.company
+20230530	04:54:44	9558e04e-8211-4552-94d7-ca7a1a439502	Error: Not allowed by CORS.	GET	/feature/supplier/search	https://jbshardware.jally.company
+20230605	03:29:30	a6f2ebeb-0c6e-45b1-a10d-52cb00633138	PayloadTooLargeError: request entity too large	POST	/migration/upload	undefined
+20230703	14:18:26	5a8c7f6d-7a39-49dc-84df-fe5d1248ba5d	Error: Not allowed by CORS.	GET	/system/account/login?user=SEINTAX&pass=$5a$32$tSnuDwpZctfa0AvyRzczJu.NAFMnXXQnedJejxZSn3Hqp9XVV5fAW&token=$5a$32$3pPiefI.K1fOTeXVRdLkNOUx8uGCwTpStqb%2F%2Fz.bG2iddPW1aUQlm	http://localhost:5174
