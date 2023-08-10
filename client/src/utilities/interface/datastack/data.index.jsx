@@ -14,8 +14,10 @@ const DataIndex = ({ name, data, isLoading, isError, inputLink, setter, manage, 
     }, [location])
 
     const toggleAdd = () => {
-        setter()
-        manage(true)
+        if (setter) {
+            setter()
+            manage(true)
+        }
     }
 
     if (!manage && (!data?.result || data?.result?.length == 0 || !isLoading)) {
