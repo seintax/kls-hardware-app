@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useQuery, useQueryClient } from "react-query"
+import { useNavigate } from "react-router-dom"
 import { useClientContext } from "../../../utilities/context/client.context"
 import { sortBy } from "../../../utilities/functions/array.functions"
 import { createInstance } from "../../../utilities/functions/datetime.functions"
@@ -11,7 +12,8 @@ import ViewerToolApply from "./viewer.tool.apply"
 import ViewerToolFixer from "./viewer.tool.fixer"
 
 const ViewerSectionDispense = ({ id, info, refetcher }) => {
-    const { user } = useClientContext()
+    const navigate = useNavigate()
+    const { user, setSelected } = useClientContext()
     const [data, setdata] = useState()
     const [records, setrecords] = useState()
     const [sorted, setsorted] = useState()
@@ -64,11 +66,23 @@ const ViewerSectionDispense = ({ id, info, refetcher }) => {
         setrecalculated(true)
     }
 
+    const inventoryLogs = (item) => {
+        setSelected(prev => ({
+            ...prev,
+            inventory: { id: item.item, key: `${item.name} ${item.details} ${item.unit}` }
+        }))
+        navigate(`/inventory/${item.item}/history`)
+    }
+
     const items = (item) => {
         return [
             {
                 value: <OnField
-                    upper={`${item.name} ${item.details}`}
+                    upper={
+                        <span className="text-blue-700 hover:text-blue-800 cursor-pointer" onClick={() => inventoryLogs(item)}>
+                            {`${item.name} ${item.details}`}
+                        </span>
+                    }
                     lower={`[${item.position}]`} />
             },
             {
@@ -115,7 +129,21 @@ const ViewerSectionDispense = ({ id, info, refetcher }) => {
                                 display: amount(item.purchase) - (amount(item.dispense) + amount(item.returned))
                             }
                         ],
-                        valid: "ABCD"
+                        valid: "ABCD",
+                        baseupdate: async (value) => {
+                            if (value !== undefined) {
+                                let data = {
+                                    purchase: value,
+                                    dispense: value,
+                                    id: item.id
+                                }
+                                let res = await updateDispensing(data)
+                                if (res.success) {
+                                    refetchDispensing()
+                                    setshowtool(false)
+                                }
+                            }
+                        }
                     }}
                 />,
             },
@@ -153,22 +181,20 @@ const ViewerSectionDispense = ({ id, info, refetcher }) => {
                                 trueval: equal(currencyFormat.format(amount(item.vat || 0)), currencyFormat.format(amount(item.price) * amount(item.taxrated) * amount(item.dispense)), true),
                                 display: currencyFormat.format(amount(item.price) * amount(item.taxrated) * amount(item.dispense)),
                                 apply: async (trueval) => {
-                                    if (!trueval) {
-                                        if (window.confirm("Are you sure you want to apply this solution?")) {
-                                            if (window.confirm(`You are about to recalculate this input with:\n` +
-                                                `Base VAT: ${amount(item.price) * amount(item.taxrated)}\n` +
-                                                `Dispense Qty: ${amount(item.dispense)}\n` +
-                                                `Outcome: ${amount(item.price) * amount(item.taxrated) * amount(item.dispense)}\n\n` +
-                                                `Do you wish to proceed?`)) {
-                                                let data = {
-                                                    vat: amount(item.price) * amount(item.taxrated) * amount(item.dispense),
-                                                    id: item.id
-                                                }
-                                                let res = await updateDispensing(data)
-                                                if (res.success) {
-                                                    refetchDispensing()
-                                                    setshowtool(false)
-                                                }
+                                    if (window.confirm("Are you sure you want to apply this solution?")) {
+                                        if (window.confirm(`You are about to recalculate this input with:\n` +
+                                            `Base VAT: ${amount(item.price) * amount(item.taxrated)}\n` +
+                                            `Dispense Qty: ${amount(item.dispense)}\n` +
+                                            `Outcome: ${amount(item.price) * amount(item.taxrated) * amount(item.dispense)}\n\n` +
+                                            `Do you wish to proceed?`)) {
+                                            let data = {
+                                                vat: amount(item.price) * amount(item.taxrated) * amount(item.dispense),
+                                                id: item.id
+                                            }
+                                            let res = await updateDispensing(data)
+                                            if (res.success) {
+                                                refetchDispensing()
+                                                setshowtool(false)
                                             }
                                         }
                                     }
@@ -204,7 +230,26 @@ const ViewerSectionDispense = ({ id, info, refetcher }) => {
                                 index: "B",
                                 label: "Dispense Total Value [ price x dispense qty ]",
                                 trueval: equal(currencyFormat.format(amount(item.price) * amount(item.dispense)), currencyFormat.format(amount(item.total))),
-                                display: currencyFormat.format(amount(item.price) * amount(item.dispense))
+                                display: currencyFormat.format(amount(item.price) * amount(item.dispense)),
+                                apply: async (trueval) => {
+                                    if (window.confirm("Are you sure you want to apply this solution?")) {
+                                        if (window.confirm(`You are about to recalculate this input with:\n` +
+                                            `Price: ${amount(item.price)}\n` +
+                                            `Dispense Qty: ${amount(item.dispense)}\n` +
+                                            `Outcome: ${amount(item.price) * amount(item.dispense)}\n\n` +
+                                            `Do you wish to proceed?`)) {
+                                            let data = {
+                                                total: amount(item.price) * amount(item.dispense),
+                                                id: item.id
+                                            }
+                                            let res = await updateDispensing(data)
+                                            if (res.success) {
+                                                refetchDispensing()
+                                                setshowtool(false)
+                                            }
+                                        }
+                                    }
+                                }
                             },
                             {
                                 index: "C",
@@ -269,22 +314,20 @@ const ViewerSectionDispense = ({ id, info, refetcher }) => {
                                 trueval: item.dispense ? equal(currencyFormat.format((amount(item.less || 0) * amount(item.dispense)) / amount(item.dispense)), currencyFormat.format((amount(item.total) - amount(item.net)) / amount(item.dispense))) : false,
                                 display: currencyFormat.format(((amount(item.less) * amount(item.dispense)) / amount(item.dispense)) || 0),
                                 apply: async (trueval) => {
-                                    if (trueval) {
-                                        if (window.confirm("Are you sure you want to apply this solution?")) {
-                                            if (window.confirm(`You are about to recalculate this input with:\n` +
-                                                `Base Discount: ${amount(item.less || 0)}\n` +
-                                                `Dispense Qty: ${amount(item.dispense)}\n` +
-                                                `Outcome: ${amount(item.less || 0) * amount(item.dispense)}\n\n` +
-                                                `Do you wish to proceed?`)) {
-                                                let data = {
-                                                    less: amount(item.less || 0) * amount(item.dispense),
-                                                    id: item.id
-                                                }
-                                                let res = await updateDispensing(data)
-                                                if (res.success) {
-                                                    refetchDispensing()
-                                                    setshowtool(false)
-                                                }
+                                    if (window.confirm("Are you sure you want to apply this solution?")) {
+                                        if (window.confirm(`You are about to recalculate this input with:\n` +
+                                            `Base Discount: ${amount(item.less || 0)}\n` +
+                                            `Dispense Qty: ${amount(item.dispense)}\n` +
+                                            `Outcome: ${amount(item.less || 0) * amount(item.dispense)}\n\n` +
+                                            `Do you wish to proceed?`)) {
+                                            let data = {
+                                                less: amount(item.less || 0) * amount(item.dispense),
+                                                id: item.id
+                                            }
+                                            let res = await updateDispensing(data)
+                                            if (res.success) {
+                                                refetchDispensing()
+                                                setshowtool(false)
                                             }
                                         }
                                     }
@@ -310,7 +353,6 @@ const ViewerSectionDispense = ({ id, info, refetcher }) => {
                                     setshowtool(false)
                                 }
                             }
-
                         }
                     }}
                 />,
@@ -355,23 +397,21 @@ const ViewerSectionDispense = ({ id, info, refetcher }) => {
                                 trueval: equal(currencyFormat.format((amount(item.price) * amount(item.dispense)) - amount(item.less)), currencyFormat.format(amount(item.net))),
                                 display: currencyFormat.format((amount(item.price) * amount(item.dispense)) - amount(item.less)),
                                 apply: async (trueval) => {
-                                    if (!trueval) {
-                                        if (window.confirm("Are you sure you want to apply this solution?")) {
-                                            if (window.confirm(`You are about to recompute on base value with:\n` +
-                                                `Price: ${amount(item.price)}\n` +
-                                                `Dispense Qty: ${amount(item.dispense)}\n` +
-                                                `Base Discount: ${amount(item.less || 0)}\n` +
-                                                `Outcome: ${(amount(item.price) * amount(item.dispense) - amount(item.less || 0))}\n\n` +
-                                                `Do you wish to proceed?`)) {
-                                                let data = {
-                                                    net: (amount(item.price) * amount(item.dispense) - amount(item.less || 0)),
-                                                    id: item.id
-                                                }
-                                                let res = await updateDispensing(data)
-                                                if (res.success) {
-                                                    refetchDispensing()
-                                                    setshowtool(false)
-                                                }
+                                    if (window.confirm("Are you sure you want to apply this solution?")) {
+                                        if (window.confirm(`You are about to recompute on base value with:\n` +
+                                            `Price: ${amount(item.price)}\n` +
+                                            `Dispense Qty: ${amount(item.dispense)}\n` +
+                                            `Base Discount: ${amount(item.less || 0)}\n` +
+                                            `Outcome: ${(amount(item.price) * amount(item.dispense) - amount(item.less || 0))}\n\n` +
+                                            `Do you wish to proceed?`)) {
+                                            let data = {
+                                                net: (amount(item.price) * amount(item.dispense) - amount(item.less || 0)),
+                                                id: item.id
+                                            }
+                                            let res = await updateDispensing(data)
+                                            if (res.success) {
+                                                refetchDispensing()
+                                                setshowtool(false)
                                             }
                                         }
                                     }
@@ -426,7 +466,7 @@ const ViewerSectionDispense = ({ id, info, refetcher }) => {
                 { value: <OnField upper={currencyFormat.format(data?.reduce((prev, curr) => prev + (amount(curr.price) * amount(curr.returned)), 0))} summary={true} /> },
                 {
                     value: <>
-                        <button className={`button-link text-xs ${user.name === "DEVELOPER" ? "" : "hidden"}`} onClick={() => toggleApply()}>Apply Summary</button>
+                        <button className={`button-link text-xs ${user?.name === "DEVELOPER" ? "" : "hidden"}`} onClick={() => toggleApply()}>Apply Summary</button>
                     </>
                 },
             ]
