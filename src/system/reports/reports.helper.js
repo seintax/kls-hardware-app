@@ -28,7 +28,8 @@ const reports = {
                 LEFT JOIN pos_sales_transaction 
                     ON trns_code = paym_trans 
         WHERE 
-            DATE(paym_time) BETWEEN '@fr' AND '@to' 
+            DATE(paym_time) BETWEEN '@fr' AND '@to' AND 
+            paym_amount > 0
         ORDER BY trns_code DESC
         `,
     dailySummary: `

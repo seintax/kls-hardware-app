@@ -74,7 +74,7 @@ const ViewerSectionPayment = ({ id, info, refetcher }) => {
                             {
                                 index: "A",
                                 label: "Data comparison by total payments [ sum of (payments) ]",
-                                trueval: equal(currencyFormat.format(amount(info?.net)), currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.amount), 0))),
+                                trueval: equal(currencyFormat.format(amount(info?.net || 0)), currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.amount || 0), 0))),
                                 display: `Trxn NET: ${currencyFormat.format(amount(info?.net || 0))} ~ Total Amount Paid: ${currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.amount || 0), 0))}`,
                                 apply: async (trueval) => {
                                     if (!trueval) {

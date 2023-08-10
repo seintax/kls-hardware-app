@@ -150,7 +150,10 @@ export const OnField = ({ upper, lower, data, summary }) => {
                     </div>
                 ))}
                 {
-                    indentifyProblematic() && data?.baseupdate ? (
+                    // indentifyProblematic() && data?.baseupdate ? (
+                    //     <BaseForm data={data} />
+                    // ) : null
+                    data?.baseupdate ? (
                         <BaseForm data={data} />
                     ) : null
                 }
@@ -250,7 +253,7 @@ const ViewerIndex = () => {
                                 Method
                             </span>
                             <h1 className="text-2xl font-semibold text-gray-900 capitalize">
-                                {info?.method}
+                                {info?.method || "N/A"}
                             </h1>
                         </div>
                         <div className="sm:flex-auto no-select">
