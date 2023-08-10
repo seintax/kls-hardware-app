@@ -92,7 +92,6 @@ const TemplateMaintenance = ({ report, toggle }) => {
                         return item
                     })
                 })
-                console.log(filter.module, res)
             }
             if (filter.module === "pos_sales_dispensing") {
                 let res = await migrateDispensing({
@@ -113,7 +112,6 @@ const TemplateMaintenance = ({ report, toggle }) => {
                         return item
                     })
                 })
-                console.log(filter.module, res)
             }
             if (filter.module === "pos_sales_credit") {
                 let res = await migrateCredits({
@@ -134,7 +132,6 @@ const TemplateMaintenance = ({ report, toggle }) => {
                         return item
                     })
                 })
-                console.log(filter.module, res)
             }
             if (filter.module === "pos_payment_collection") {
                 let res = await migratePayment({
@@ -155,7 +152,6 @@ const TemplateMaintenance = ({ report, toggle }) => {
                         return item
                     })
                 })
-                console.log(filter.module, res)
             }
         }
     }

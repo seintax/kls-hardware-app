@@ -69,8 +69,6 @@ const searchRecord = async (param, callback) => {
 
 const balanceRecord = async (param, callback) => {
     let sql = table.customer.balanceUpdate
-    console.log(sql)
-    console.log(param)
     my.query(sql, [param.id], async (err, ans) => {
         if (err) return callback(err)
         return callback(null, ans)
