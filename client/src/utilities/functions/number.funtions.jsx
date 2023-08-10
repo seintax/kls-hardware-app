@@ -12,9 +12,9 @@ export const equal = (value1, value2, log = false) => {
     if (amount(value1) === amount(value2)) return true
     let difference = Math.abs(amount(value1) - amount(value2))
     if (log) {
-        // console.log(value1)
-        // console.log(value2)
-        // console.log(difference)
+        // console.info(value1)
+        // console.info(value2)
+        // console.info(difference)
     }
     if (difference > 0 && difference < 1) return true
     return false
