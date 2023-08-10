@@ -16,6 +16,7 @@ const CasheringLogged = ({ show, toggle, user, openTransaction }) => {
     const [dateto, setdateto] = useState(moment(new Date()).format("YYYY-MM-DD"))
     const [code, setcode] = useState("")
     const [data, setdata] = useState([])
+    const defaultCashier = 4
 
     const [records, setrecords] = useState()
     const [currentRecord, setCurrentRecord] = useState({})
@@ -97,11 +98,11 @@ const CasheringLogged = ({ show, toggle, user, openTransaction }) => {
         setdata()
         setstartpage(1)
         if (code.startsWith("!")) {
-            let res = await fetchTransactionBySlipno(user.id, code.replace("!", ""))
+            let res = await fetchTransactionBySlipno(user?.name === "DEVELOPER" ? defaultCashier : user?.id, code.replace("!", ""))
             if (res?.result?.length) setdata(res?.result)
         }
         else {
-            let res = await fetchTransactionByLogged(moment(datefr).format("YYYY-MM-DD"), moment(dateto).format("YYYY-MM-DD"), user?.id, code)
+            let res = await fetchTransactionByLogged(moment(datefr).format("YYYY-MM-DD"), moment(dateto).format("YYYY-MM-DD"), user?.name === "DEVELOPER" ? defaultCashier : user?.id, code)
             if (res?.result?.length) setdata(res?.result)
         }
         setloading(false)
