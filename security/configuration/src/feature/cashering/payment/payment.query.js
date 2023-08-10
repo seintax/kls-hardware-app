@@ -109,7 +109,6 @@ const returnRecord = async (param, callback) => {
         })
         return retrieve
     }))
-    console.log(batch)
     return callback(null, batch)
 }
 
