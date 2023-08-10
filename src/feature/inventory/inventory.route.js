@@ -168,7 +168,6 @@ router.post('/inventory/balance', async (req, res) => {
 })
 
 router.post('/inventory/stocks', async (req, res) => {
-    console.log(req)
     await service.stocksRecord(req.body, (err, ans) => {
         if (err) return res.status(200).json({
             success: false, error: err

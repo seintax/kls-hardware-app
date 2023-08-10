@@ -100,7 +100,6 @@ const AccountRecords = ({ setter, manage, refetch, data }) => {
     }
 
     const loginAs = async (item) => {
-        console.log(item)
         if (!item.pass) {
             handleNotification({
                 type: 'error',

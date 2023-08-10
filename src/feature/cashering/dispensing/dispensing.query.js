@@ -126,7 +126,6 @@ const inventoryRecord = async (param, callback) => {
 }
 
 const migrateRecord = async (param, callback) => {
-    // console.log(param.data)
     let batch = await Promise.all(param.data?.map(async item => {
         let response = await new Promise(async (resolve, reject) => {
             let helper = query.migrateBuilder(item, table.dispensing)
