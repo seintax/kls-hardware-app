@@ -22,7 +22,7 @@ const AccountIndex = () => {
             <DataIndex
                 data={data}
                 name={name}
-                setter={setId}
+                setter={user?.name === "DEVELOPER" || user?.name === "SYSTEM ADMINISTRATOR" ? setId : undefined}
                 manage={setManage}
                 isError={isError}
                 isLoading={isLoading}

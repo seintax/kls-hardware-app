@@ -27,9 +27,9 @@ const AccountRecords = ({ setter, manage, refetch, data }) => {
         style: '',
         items: [
             { name: 'Username', stack: true, sort: 'user' },
-            { name: 'Fullname', stack: false, sort: 'name', size: 250 },
-            { name: 'Duration', stack: true, sort: 'time', size: 250 },
-            { name: '', size: 170 },
+            { name: 'Fullname', stack: false, sort: 'name', size: 350 },
+            { name: 'Duration', stack: true, sort: 'time', size: 300 },
+            { name: '', stack: true, size: 170 },
             { name: '', stack: false, screenreader: 'Action', size: 150 },
         ]
     }
@@ -56,8 +56,8 @@ const AccountRecords = ({ setter, manage, refetch, data }) => {
 
     const actions = (item) => {
         return [
-            { type: 'button', trigger: () => toggleEdit(item), label: 'Edit' },
-            { type: 'button', trigger: () => toggleDelete(item), label: 'Delete' }
+            { type: 'button', trigger: () => toggleEdit(item), label: 'Edit', hidden: user.name !== "DEVELOPER" && user.name !== "SYSTEM ADMINISTRATOR" },
+            { type: 'button', trigger: () => toggleDelete(item), label: 'Delete', hidden: user.name !== "DEVELOPER" && user.name !== "SYSTEM ADMINISTRATOR" }
         ]
     }
 
