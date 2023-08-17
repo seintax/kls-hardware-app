@@ -8,6 +8,7 @@ import { useClientContext } from "../../../utilities/context/client.context"
 import { useNotificationContext } from "../../../utilities/context/notification.context"
 import { createInstance } from "../../../utilities/functions/datetime.functions"
 import { currencyFormat } from "../../../utilities/functions/number.funtions"
+import { fetchCustomerById } from "../../library/customer/customer.services"
 import { fetchTransactionByCode } from "../cashering/cashering.service"
 import ViewerSectionCredits from "./viewer.section.credits"
 import ViewerSectionDispense from "./viewer.section.dispense"
@@ -188,6 +189,14 @@ const ViewerIndex = () => {
     const [instance, setinstance] = useState(createInstance())
     const { data, isLoading, isError, refetch } = useQuery([`getTransactionById`, id, instance], () => fetchTransactionByCode(id))
     const [info, setinfo] = useState()
+    const [creditor, setcreditor] = useState()
+    const [customer, setcustomer] = useState()
+
+    const getCustomerById = useQuery({
+        queryKey: ["getCustomerById", creditor, instance],
+        queryFn: async (e) => await fetchCustomerById(e.queryKey[1]),
+        enabled: !!creditor
+    })
 
     const refetchTransaction = () => {
         queryClient.invalidateQueries(["getTransactionById", id, instance])
@@ -227,6 +236,14 @@ const ViewerIndex = () => {
         })
     }
 
+    useEffect(() => {
+        if (getCustomerById.isSuccess) {
+            setcustomer(getCustomerById.data.result)
+            console.log(getCustomerById.data.result)
+        }
+    }, [getCustomerById.status])
+
+
     return (
         <div className="flex flex-col px-4 sm:px-6 lg:px-8 h-full gap-10 text-xs">
             <div className="w-full flex flex-col sm:flex-row gap-5 pb-5">
@@ -264,6 +281,14 @@ const ViewerIndex = () => {
                                 {info?.status}
                             </h1>
                         </div>
+                        <div className="sm:flex-auto no-select">
+                            <span className="text-sm text-gray-500">
+                                Receipt No.
+                            </span>
+                            <h1 className="text-2xl font-semibold text-gray-900 capitalize">
+                                {info?.ordno}
+                            </h1>
+                        </div>
                     </div>
                     <div className="w-[700px] lg:w-[1200px] min-h-full border border-1 border-gray-400 flex flex-col p-3 relative">
                         <div className="py-3 px-1 text-sm font-semibold flex gap-5 items-center justify-between cursor-pointer" onDoubleClick={() => copyQueryToClipboard("pos_sales_dispensing", "sale")}>
@@ -294,7 +319,7 @@ const ViewerIndex = () => {
                             Credits Record: <ClipboardDocumentCheckIcon className="w-5 h-5" />
                         </div>
                         <div className="overflow-auto max-h-[600px]">
-                            <ViewerSectionCredits id={id} info={info} refetcher={refetchTransaction} />
+                            <ViewerSectionCredits id={id} info={info} refetcher={refetchTransaction} setcreditor={setcreditor} />
                         </div>
                         <div className="py-3 px-1 text-sm font-semibold flex gap-5 items-center justify-between cursor-pointer" onDoubleClick={() => copyQueryToClipboard("pos_return_reimbursement", "reim")}>
                             Reimbursed Record: <ClipboardDocumentCheckIcon className="w-5 h-5" />
@@ -309,14 +334,6 @@ const ViewerIndex = () => {
                         <button className="rounded-md bg-gradient-to-b from-blue-500 to-blue-700 px-5 py-3 text-white hover:from-blue-600 hover:to-blue-800 flex gap-2" onClick={() => copyURLToClipboard()}>
                             <LinkIcon className="w-4 h-4" /> SHARE LINK
                         </button>
-                    </div>
-                    <div className="flex flex-col no-select flex-none mt-1">
-                        <span className="text-sm text-gray-500">
-                            Receipt No.
-                        </span>
-                        <h1 className="text-2xl font-semibold text-gray-900 capitalize">
-                            {info?.ordno}
-                        </h1>
                     </div>
                     <div className="flex flex-col no-select flex-none">
                         <span className="text-sm text-gray-500">
@@ -378,6 +395,19 @@ const ViewerIndex = () => {
                             {moment(info?.date).format("MMMM DD, YYYY")?.toUpperCase()}
                         </h1>
                         <span className="text-md font-semibold text-gray-900">Logged {moment(info?.time).format("MM-DD-YYYY hh:mm:ss A")?.toUpperCase()}</span>
+                    </div>
+                    <div className="flex flex-col no-select flex-none">
+                        <span className="text-sm text-gray-500">
+                            Customer
+                        </span>
+                        <h1 className="text-2xl font-semibold text-gray-900 capitalize">
+                            {customer?.name ? customer?.name : "None"}
+                        </h1>
+                        {
+                            customer?.name ? (
+                                <span className="text-md font-semibold text-gray-900">Credit Value at {currencyFormat.format(customer?.value || 0)}</span>
+                            ) : null
+                        }
                     </div>
                 </div>
             </div>
