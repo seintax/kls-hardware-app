@@ -117,7 +117,7 @@ const ViewerSectionPayment = ({ id, info, refetcher }) => {
             },
             { value: <OnField upper={item.refcode} lower={moment(item.refdate).format("MM-DD-YYYY")} /> },
             { value: <OnField upper={item.refstat} lower={`Reimburse: ${item.reimburse}`} /> },
-            { value: <OnField upper={moment(item.refdate).format("MM-DD-YYYY hh:mm:ss A")} lower={`Shift: ${item.shift}`} /> },
+            { value: <OnField upper={moment(item.time).format("MM-DD-YYYY hh:mm:ss A")} lower={`Shift: ${item.shift}`} /> },
             // { value: currencyFormat.format(item.value) },
             // { value: currencyFormat.format(item.waive) },
         ]
@@ -133,7 +133,7 @@ const ViewerSectionPayment = ({ id, info, refetcher }) => {
                 }
             }))
         }
-    }, [data, sorted])
+    }, [data, sorted, info])
 
     return (
         <div className="w-full">

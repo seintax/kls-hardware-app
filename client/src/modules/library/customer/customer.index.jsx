@@ -9,7 +9,7 @@ import { fetchCustomer } from "./customer.services"
 const CustomerIndex = () => {
     const { search } = useClientContext()
     const name = 'Customer'
-    const { data, isLoading, isError, refetch } = useQuery(`${name.toLowerCase()}-index`, () => fetchCustomer())
+    const { data, isLoading, isError, refetch } = useQuery(`${name.toLowerCase()}-index`, () => fetchCustomer(search.key))
     const [manage, setManage] = useState(false)
     const [id, setId] = useState()
 
