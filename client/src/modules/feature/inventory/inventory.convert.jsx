@@ -45,12 +45,13 @@ const InventoryConvert = ({ id, reference, show, setshow }) => {
         price: yup
             .number()
             .required('This is a required field.'),
-        receipt: yup
-            .string()
-            .required('This is a required field.'),
         isloose: yup
             .string()
             .required('This is a required field.'),
+        receipt: yup
+            .string()
+            .max(20, "Maximum of 20 characters")
+            .required('This is a required field.')
     })
 
     const fields = (errors, register, values, setValue, watch, reset) => {
