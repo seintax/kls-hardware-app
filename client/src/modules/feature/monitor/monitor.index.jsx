@@ -9,7 +9,7 @@ import { fetchPaymentByCheque } from './monitor.services'
 const MonitorIndex = () => {
     const { search } = useClientContext()
     const name = 'Monitor'
-    const { data, isLoading, isError, refetch } = useQuery(`${name.toLowerCase()}-index`, () => fetchPaymentByCheque())
+    const { data, refetch } = useQuery(`${name.toLowerCase()}-index`, () => fetchPaymentByCheque())
     const [manage, setManage] = useState(false)
     const [printable, setprintable] = useState()
     const [id, setId] = useState()
@@ -27,7 +27,6 @@ const MonitorIndex = () => {
             diff /= (60 * 60) * 24
             return Math.round(diff)
         }
-
         if (data?.result) {
             let result = data?.result?.map(data => {
                 let beg = (new Date()).getTime()

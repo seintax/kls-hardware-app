@@ -42,28 +42,43 @@ const selectRecord = async (param, callback) => {
         filter: [name?.Like()],
         order: [id?.Asc()]
     }
-    let sql = query.builder.rec(table.dispensing, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
+    // let sql = query.builder.rec(table.dispensing, options.filter, options.order)
+    // my.query(sql, options.parameter, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.rec(table.dispensing, options.filter, options.order)
+    my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 
 const uniqueRecord = async (param, callback) => {
-    let sql = query.builder.get(table.dispensing, table.dispensing.fields.id)
-    my.query(sql, [param.id], (err, ans) => {
+    // let sql = query.builder.get(table.dispensing, table.dispensing.fields.id)
+    // my.query(sql, [param.id], (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.get(table.dispensing, table.dispensing.fields.id)
+    my.query(sql.query, [param.id], (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 
 const searchRecord = async (param, callback) => {
     let { id } = table.dispensing.fields
     let helper = query.searchBuilder(param.search, table.dispensing)
-    let sql = query.builder.src(table.dispensing, helper.filters, [id?.Asc()])
-    my.query(sql, helper.parameters, (err, ans) => {
+    // let sql = query.builder.src(table.dispensing, helper.filters, [id?.Asc()])
+    // my.query(sql, helper.parameters, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.src(table.dispensing, helper.filters, [id?.Asc()])
+    my.query(sql.query, helper.parameters, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 
@@ -89,10 +104,15 @@ const transactionRecord = async (param, callback) => {
         filter: [code?.Is()],
         order: [id?.Asc()]
     }
-    let sql = query.builder.rec(table.dispensing, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
+    // let sql = query.builder.rec(table.dispensing, options.filter, options.order)
+    // my.query(sql, options.parameter, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.rec(table.dispensing, options.filter, options.order)
+    my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 
@@ -118,10 +138,15 @@ const inventoryRecord = async (param, callback) => {
         filter: [item?.Is(), conv?.Is(), dispense?.Greater()],
         order: [id?.Asc()]
     }
-    let sql = query.builder.rec(table.dispensing, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
+    // let sql = query.builder.rec(table.dispensing, options.filter, options.order)
+    // my.query(sql, options.parameter, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.rec(table.dispensing, options.filter, options.order)
+    my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 

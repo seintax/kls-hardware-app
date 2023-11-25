@@ -75,7 +75,6 @@ const CasheringLogged = ({ show, toggle, user, openTransaction }) => {
 
     useEffect(() => {
         if (data) {
-            console.log(data)
             let tempdata = sorted ? sortBy(data, sorted) : data
             setrecords(tempdata?.map((item, i) => {
                 return {
