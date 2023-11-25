@@ -11,7 +11,7 @@ import { deleteCredits, fetchCreditsByTransaction, updateCredits } from "../cred
 import { OnField } from "./viewer.index"
 import ViewerToolFixer from "./viewer.tool.fixer"
 
-const ViewerSectionCredits = ({ id, info, refetcher }) => {
+const ViewerSectionCredits = ({ id, info, refetcher, setcreditor }) => {
     const { user } = useClientContext()
     const [data, setdata] = useState()
     const [records, setrecords] = useState()
@@ -80,24 +80,22 @@ const ViewerSectionCredits = ({ id, info, refetcher }) => {
                             {
                                 index: "A",
                                 label: "Derived payment [ credit balance ~ payment + succeeding ]",
-                                trueval: amount(item.succeeding) >= 0 ? equal(currencyFormat.format(amount(item.balance)), currencyFormat.format(amount(item.payment) + amount(item.succeeding))) : false,
-                                display: currencyFormat.format(amount(item.payment) + amount(item.succeeding)),
+                                trueval: amount(item.succeeding || 0) > 0 ? equal(currencyFormat.format(amount(item.balance || 0)), currencyFormat.format(amount(item.payment || 0) + amount(item.succeeding || 0))) : true,
+                                display: currencyFormat.format(amount(item.payment || 0) + amount(item.succeeding || 0)),
                                 apply: async (trueval) => {
-                                    if (!trueval) {
-                                        if (window.confirm("Are you sure you want to apply this solution?")) {
-                                            if (window.confirm(`You are about to recompute values with:\n` +
-                                                `Credit Payment: ${amount(item.payment) + amount(item.succeeding || 0)}\n` +
-                                                `Outcome: ${amount(item.payment) + amount(item.succeeding || 0)}\n\n` +
-                                                `Do you wish to proceed?`)) {
-                                                let data = {
-                                                    payment: amount(item.payment) + amount(item.succeeding || 0),
-                                                    id: item.id
-                                                }
-                                                let res = await updateCredits(data)
-                                                if (res.success) {
-                                                    refetchCredits()
-                                                    setshowtool(false)
-                                                }
+                                    if (window.confirm("Are you sure you want to apply this solution?")) {
+                                        if (window.confirm(`You are about to recompute values with:\n` +
+                                            `Credit Payment: ${amount(item.payment) + amount(item.succeeding || 0)}\n` +
+                                            `Outcome: ${amount(item.payment) + amount(item.succeeding || 0)}\n\n` +
+                                            `Do you wish to proceed?`)) {
+                                            let data = {
+                                                payment: amount(item.payment) + amount(item.succeeding || 0),
+                                                id: item.id
+                                            }
+                                            let res = await updateCredits(data)
+                                            if (res.success) {
+                                                refetchCredits()
+                                                setshowtool(false)
                                             }
                                         }
                                     }
@@ -124,8 +122,8 @@ const ViewerSectionCredits = ({ id, info, refetcher }) => {
                             {
                                 index: "A",
                                 label: "Data comparison by transaction NET [ transaction net ]",
-                                trueval: equal(currencyFormat.format(info?.net), currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.payment), 0) + data?.reduce((prev, curr) => prev + (curr.status === "ON-GOING" ? amount(curr.balance) : 0), 0))),
-                                display: `Trxn NET: ${currencyFormat.format(info?.net)} ~ Total Credit Balance: ${currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.payment), 0) + data?.reduce((prev, curr) => prev + (curr.status === "ON-GOING" ? amount(curr.balance) : 0), 0))}`,
+                                trueval: equal(currencyFormat.format(info?.net || 0), currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.payment || 0), 0) + data?.reduce((prev, curr) => prev + (curr.status === "ON-GOING" ? amount(curr.balance) : 0), 0))),
+                                display: `Trxn NET: ${currencyFormat.format(info?.net)} ~ Total Credit Balance: ${currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.payment || 0), 0) + data?.reduce((prev, curr) => prev + (curr.status === "ON-GOING" ? amount(curr.balance) : 0), 0))}`,
                                 apply: async (trueval) => {
                                     if (!trueval) {
                                         if (window.confirm("Are you sure you want to apply this solution?")) {
@@ -187,7 +185,7 @@ const ViewerSectionCredits = ({ id, info, refetcher }) => {
                 />
             },
             { value: <OnField upper={`${currencyFormat.format(item.tended)}`} lower={`Change: ${currencyFormat.format(item.loose)}`} /> },
-            { value: <OnField upper={`${currencyFormat.format(item.succeeding)}`} lower="" /> },
+            { value: <OnField upper={`${currencyFormat.format(item.succeeding || 0)}`} lower="" /> },
             // { value: currencyFormat.format(item.waive) },
         ]
     }
@@ -210,12 +208,12 @@ const ViewerSectionCredits = ({ id, info, refetcher }) => {
             items: [
                 { value: "TOTAL" },
                 { value: <OnField upper={currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.partial || 0), 0))} summary={true} /> },
-                { value: <OnField upper={currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.payment), 0))} summary={true} /> },
+                { value: <OnField upper={currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.payment || 0), 0))} summary={true} /> },
                 { value: <OnField upper={currencyFormat.format(data?.reduce((prev, curr) => prev + (curr.status === "ON-GOING" ? amount(curr.balance) : 0), 0))} summary={true} /> },
-                { value: <OnField upper={currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.tended), 0))} summary={true} /> },
+                { value: <OnField upper={currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.tended || 0), 0))} summary={true} /> },
                 {
                     value: <>
-                        <button className={`button-link text-xs ${user.name === "DEVELOPER" ? "" : "hidden"}`} onClick={() => toggleCreditUpdate()}>Update Creditor Balance</button>
+                        <button className={`button-link text-xs no-select ${user.name === "DEVELOPER" ? "" : "hidden"}`} onClick={() => toggleCreditUpdate()}>Update Creditor Balance</button>
                     </>
                 },
             ]
@@ -224,6 +222,7 @@ const ViewerSectionCredits = ({ id, info, refetcher }) => {
 
     useEffect(() => {
         if (data) {
+            if (data?.length) setcreditor(data[0]?.customer)
             let formatted = data?.map(item => {
                 return {
                     ...item,
@@ -238,13 +237,13 @@ const ViewerSectionCredits = ({ id, info, refetcher }) => {
                 }
             }))
         }
-    }, [data, sorted])
+        if (!data?.length) setcreditor()
+    }, [data, sorted, info])
 
     return (
         <div className="w-full">
             {
                 (data?.length) ? (
-
                     <div className="w-[2000px]">
                         <DataRecords
                             columns={columns}

@@ -42,28 +42,43 @@ const selectRecord = async (param, callback) => {
         filter: [customer?.Like()],
         order: [id?.Asc()]
     }
-    let sql = query.builder.rec(table.credits, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
+    // let sql = query.builder.rec(table.credits, options.filter, options.order)
+    // my.query(sql, options.parameter, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.rec(table.credits, options.filter, options.order)
+    my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 
 const uniqueRecord = async (param, callback) => {
-    let sql = query.builder.get(table.credits, table.credits.fields.id)
-    my.query(sql, [param.id], (err, ans) => {
+    // let sql = query.builder.get(table.credits, table.credits.fields.id)
+    // my.query(sql, [param.id], (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.get(table.credits, table.credits.fields.id)
+    my.query(sql.query, [param.id], (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 
 const searchRecord = async (param, callback) => {
     let { id } = table.credits.fields
     let helper = query.searchBuilder(param.search, table.credits)
-    let sql = query.builder.src(table.credits, helper.filters, [id?.Asc()])
-    my.query(sql, helper.parameters, (err, ans) => {
+    // let sql = query.builder.src(table.credits, helper.filters, [id?.Asc()])
+    // my.query(sql, helper.parameters, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.src(table.credits, helper.filters, [id?.Asc()])
+    my.query(sql.query, helper.parameters, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 
@@ -75,10 +90,15 @@ const customerRecord = async (param, callback) => {
         filter: [customer?.Is(), query.optional([code?.Like(), ordno?.Like()]), status?.Is(), balance?.Greater("0")],
         order: [id?.Asc()]
     }
-    let sql = query.builder.rec(table.credits, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
+    // let sql = query.builder.rec(table.credits, options.filter, options.order)
+    // my.query(sql, options.parameter, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.rec(table.credits, options.filter, options.order)
+    my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 
@@ -90,10 +110,15 @@ const settledRecord = async (param, callback) => {
         filter: [customer?.Is(), query.optional([code?.Like(), ordno?.Like(), status?.Like()]), status?.IsNot()],
         order: [code?.Asc(), id?.Asc()]
     }
-    let sql = query.builder.rec(table.credits, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
+    // let sql = query.builder.rec(table.credits, options.filter, options.order)
+    // my.query(sql, options.parameter, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.rec(table.credits, options.filter, options.order)
+    my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 
@@ -104,10 +129,15 @@ const ongoingRecord = async (param, callback) => {
         filter: [code?.Is(), status?.Is(), balance?.Greater("0")],
         order: [id?.Asc()]
     }
-    let sql = query.builder.rec(table.credits, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
+    // let sql = query.builder.rec(table.credits, options.filter, options.order)
+    // my.query(sql, options.parameter, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.rec(table.credits, options.filter, options.order)
+    my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 
@@ -128,10 +158,15 @@ const transactionRecord = async (param, callback) => {
         filter: [code?.Is()],
         order: [id?.Asc()]
     }
-    let sql = query.builder.rec(table.credits, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
+    // let sql = query.builder.rec(table.credits, options.filter, options.order)
+    // my.query(sql, options.parameter, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.rec(table.credits, options.filter, options.order)
+    my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 

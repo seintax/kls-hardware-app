@@ -49,8 +49,29 @@ const MonitorRecords = ({ setter, manage, refetch, data, setprintable }) => {
         }
     }
 
+    const toggleConvert = async (item) => {
+        if (window.confirm("Do you wish to convert this as cash?")) {
+            let param = {
+                method: "CASH",
+                refcode: "NA",
+                refdate: null,
+                refstat: "NOT APPLICABLE",
+                id: item.id
+            }
+            let res = await updatePayment(param)
+            if (res.success) {
+                queryClient.invalidateQueries("monitor-index")
+                handleNotification({
+                    type: 'success',
+                    message: `Cheque No. ${item.refcode} mode of payment has been modified to CASH and removed from the list.`,
+                })
+            }
+        }
+    }
+
     const actions = (item) => {
         return [
+            { type: 'button', trigger: () => toggleConvert(item), label: 'Convert as Cash', hidden: item.method === "CASH" || item.refstat === "CLAIMED" },
             { type: 'button', trigger: () => toggleClaim(item), label: 'Claim', hidden: item.refstat === "CLAIMED" },
         ]
     }
