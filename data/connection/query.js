@@ -91,6 +91,25 @@ const alias = (table) => {
     return names.join(", ")
 }
 
+const fields = (table) => {
+    let names = {}
+    for (const prop in table.fields) {
+        names = {
+            ...names,
+            [table.fields[prop]]: prop
+        }
+    }
+    if (table?.joined) {
+        for (const prop in table.joined) {
+            names = {
+                ...names,
+                [table.joined[prop]]: prop
+            }
+        }
+    }
+    return names
+}
+
 const compare = (base, fields) => {
     const names = []
     for (const prop in base) {
@@ -125,6 +144,14 @@ const rec = (table, filter, order, limit) => {
     return `SELECT ${alias(table)} FROM ${table.name}${condition} WHERE ${filter?.filter(f => f !== undefined)?.join(" AND ")}${order ? ` ORDER BY ${order.join(", ")}` : ""}${limit ? ` LIMIT ${limit}` : ""}`
 }
 
+const rec_ = (table, filter, order, limit) => {
+    let condition = table?.conditional ? ` ${table?.conditional}` : ""
+    return {
+        query: `SELECT * FROM ${table.name}${condition} WHERE ${filter?.filter(f => f !== undefined)?.join(" AND ")}${order ? ` ORDER BY ${order.join(", ")}` : ""}${limit ? ` LIMIT ${limit}` : ""}`,
+        array: fields(table)
+    }
+}
+
 // query builder for select
 const src = (table, filter, order, situational = []) => {
     let condition = table?.conditional ? ` ${table?.conditional}` : ""
@@ -132,10 +159,47 @@ const src = (table, filter, order, situational = []) => {
     return `SELECT ${alias(table)} FROM ${table.name}${condition} WHERE (${filter.join(" OR ")})${situational.length ? situation : ""} ORDER BY ${order.join(", ")}`
 }
 
+const src_ = (table, filter, order, situational = []) => {
+    let condition = table?.conditional ? ` ${table?.conditional}` : ""
+    let situation = filter?.length ? ` AND ${situational.join(" AND ")}` : ` ${situational.join(" AND ")}`
+    return {
+        query: `SELECT * FROM ${table.name}${condition} WHERE (${filter.join(" OR ")})${situational.length ? situation : ""} ORDER BY ${order.join(", ")}`,
+        array: fields(table)
+    }
+}
+
 // query builder for single
 const get = (table, id) => {
     let condition = table?.conditional ? ` ${table?.conditional}` : ""
     return `SELECT ${alias(table)} FROM ${table.name}${condition} WHERE ${id}=?`
+}
+
+const get_ = (table, id) => {
+    let condition = table?.conditional ? ` ${table?.conditional}` : ""
+    return {
+        query: `SELECT * FROM ${table.name}${condition} WHERE ${id}=?`,
+        array: fields(table)
+    }
+}
+
+const mask = (response, fieldarr) => {
+    if (response.length > 0) {
+        return response?.map(data => {
+            let json = {}
+            for (const prop in data) {
+                if (fieldarr[prop]) {
+                    json = {
+                        ...json,
+                        [fieldarr[prop]]: data[prop]
+                    }
+                    continue
+                }
+                json = { ...json, [prop]: data[prop] }
+            }
+            return json
+        })
+    }
+    return response
 }
 
 // query builder for union
@@ -164,7 +228,13 @@ const builder = {
     rec: rec,
     get: get,
     src: src,
-    union: union
+    union: union,
+}
+
+const optimize = {
+    rec: rec_,
+    get: get_,
+    src: src_,
 }
 
 module.exports = {
@@ -173,5 +243,7 @@ module.exports = {
     searchBuilder,
     migrateBuilder,
     optional,
+    optimize,
     builder,
+    mask
 }

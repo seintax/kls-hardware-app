@@ -239,7 +239,6 @@ const ViewerIndex = () => {
     useEffect(() => {
         if (getCustomerById.isSuccess) {
             setcustomer(getCustomerById.data.result)
-            console.log(getCustomerById.data.result)
         }
     }, [getCustomerById.status])
 

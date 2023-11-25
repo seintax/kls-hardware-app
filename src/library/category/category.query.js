@@ -42,18 +42,28 @@ const selectRecord = async (param, callback) => {
         filter: [name?.Like()],
         order: [name?.Asc()]
     }
-    let sql = query.builder.rec(table.category, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
+    // let sql = query.builder.rec(table.category, options.filter, options.order)
+    // my.query(sql, options.parameter, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.rec(table.category, options.filter, options.order)
+    my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 
 const uniqueRecord = async (param, callback) => {
-    let sql = query.builder.get(table.category, table.category.fields.id)
-    my.query(sql, [param.id], (err, ans) => {
+    // let sql = query.builder.get(table.category, table.category.fields.id)
+    // my.query(sql, [param.id], (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.get(table.category, table.category.fields.id)
+    my.query(sql.query, [param.id], (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 
