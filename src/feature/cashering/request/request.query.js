@@ -42,28 +42,44 @@ const selectRecord = async (param, callback) => {
         filter: [name?.Like()],
         order: [id?.Asc()]
     }
-    let sql = query.builder.rec(table.request, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
+    // let sql = query.builder.rec(table.request, options.filter, options.order)
+    // my.query(sql, options.parameter, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.rec(table.request, options.filter, options.order)
+    my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
+
 }
 
 const uniqueRecord = async (param, callback) => {
-    let sql = query.builder.get(table.request, table.request.fields.id)
-    my.query(sql, [param.id], (err, ans) => {
+    // let sql = query.builder.get(table.request, table.request.fields.id)
+    // my.query(sql, [param.id], (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.get(table.request, table.request.fields.id)
+    my.query(sql.query, [param.id], (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 
 const searchRecord = async (param, callback) => {
     let { id } = table.request.fields
     let helper = query.searchBuilder(param.search, table.request)
-    let sql = query.builder.src(table.request, helper.filters, [id?.Asc()])
-    my.query(sql, helper.parameters, (err, ans) => {
+    // let sql = query.builder.src(table.request, helper.filters, [id?.Asc()])
+    // my.query(sql, helper.parameters, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.src(table.request, helper.filters, [id?.Asc()])
+    my.query(sql.query, helper.parameters, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
 }
 
@@ -74,11 +90,17 @@ const progressRecord = async (param, callback) => {
         filter: [code?.Is(), status?.Like()],
         order: [id?.Desc()]
     }
-    let sql = query.builder.rec(table.request, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
+    // let sql = query.builder.rec(table.request, options.filter, options.order)
+    // my.query(sql, options.parameter, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.rec(table.request, options.filter, options.order)
+    my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
+
 }
 
 const statusRecord = async (param, callback) => {
@@ -90,11 +112,17 @@ const statusRecord = async (param, callback) => {
         }))],
         order: [id?.Desc()]
     }
-    let sql = query.builder.rec(table.request, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
+    // let sql = query.builder.rec(table.request, options.filter, options.order)
+    // my.query(sql, options.parameter, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.rec(table.request, options.filter, options.order)
+    my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
+
 }
 
 const transactionRecord = async (param, callback) => {
@@ -104,11 +132,17 @@ const transactionRecord = async (param, callback) => {
         filter: [code?.Is()],
         order: [id?.Asc()]
     }
-    let sql = query.builder.rec(table.request, options.filter, options.order)
-    my.query(sql, options.parameter, (err, ans) => {
+    // let sql = query.builder.rec(table.request, options.filter, options.order)
+    // my.query(sql, options.parameter, (err, ans) => {
+    //     if (err) return callback(err)
+    //     return callback(null, ans)
+    // })
+    let sql = query.optimize.rec(table.request, options.filter, options.order)
+    my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        return callback(null, query.mask(ans, sql.array))
     })
+
 }
 
 module.exports = {

@@ -106,34 +106,42 @@ const DataContainer = ({ columns, records, page, setPage, itemsperpage, setsorte
                         }
                         {
                             (!!data?.length && summary) && (
-                                <tr
-                                    key={summary?.key}
-                                    className={`bg-gray-200`}
-                                >
-                                    <td className="border-b border-gray-200 px-2 py-4 text-xs text-gray-500 no-select">&nbsp;</td>
-                                    {
-                                        (summary.items?.length) ? (
-                                            summary.items?.map((item, itemindex) => (
-                                                <td
-                                                    key={itemindex}
-                                                    className={`w-full max-w-0 py-4 border-b border-gray-200 pl-4 pr-6 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6 lg:table-cell ${order[itemindex]?.screenreader ? "flex justify-end gap-2" : ""} ${itemstyle} ${order[itemindex]?.position}`}
-                                                >
-                                                    <b>{item.value}</b>
-                                                </td>
-                                            ))
-                                        ) : null
-                                    }
-                                </tr>
+                                <table>
+                                    <tbody>
+                                        <tr
+                                            key={summary?.key}
+                                            className={`bg-gray-200`}
+                                        >
+                                            <td className="border-b border-gray-200 px-2 py-4 text-xs text-gray-500 no-select">&nbsp;</td>
+                                            {
+                                                (summary.items?.length) ? (
+                                                    summary.items?.map((item, itemindex) => (
+                                                        <td
+                                                            key={itemindex}
+                                                            className={`w-full max-w-0 py-4 border-b border-gray-200 pl-4 pr-6 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6 lg:table-cell ${order[itemindex]?.screenreader ? "flex justify-end gap-2" : ""} ${itemstyle} ${order[itemindex]?.position}`}
+                                                        >
+                                                            <b>{item.value}</b>
+                                                        </td>
+                                                    ))
+                                                ) : null
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>
                             )
                         }
                         {
                             (!data?.length) && (
-                                <tr>
-                                    <td className="hidden border-b border-gray-200 pl-6 pr-3 py-4 text-sm text-gray-500 lg:table-cell"></td>
-                                    <td colSpan={100} className="w-full max-w-0 py-4 border-b border-gray-200 pl-4 pr-6 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                                        No record listed.
-                                    </td>
-                                </tr>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td className="hidden border-b border-gray-200 pl-6 pr-3 py-4 text-sm text-gray-500 lg:table-cell"></td>
+                                            <td colSpan={100} className="w-full max-w-0 py-4 border-b border-gray-200 pl-4 pr-6 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
+                                                No record listed.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             )
                         }
                     </div>

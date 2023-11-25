@@ -466,7 +466,7 @@ const ViewerSectionDispense = ({ id, info, refetcher }) => {
                 { value: <OnField upper={currencyFormat.format(data?.reduce((prev, curr) => prev + (amount(curr.price) * amount(curr.returned)), 0))} summary={true} /> },
                 {
                     value: <>
-                        <button className={`button-link text-xs ${user?.name === "DEVELOPER" ? "" : "hidden"}`} onClick={() => toggleApply()}>Apply Summary</button>
+                        <button className={`button-link text-xs no-select ${user?.name === "DEVELOPER" ? "" : "hidden"}`} onClick={() => toggleApply()}>Apply Summary</button>
                     </>
                 },
             ]
