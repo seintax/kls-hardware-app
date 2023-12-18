@@ -24,7 +24,7 @@ const DashboardCards = ({ data, refetch }) => {
     }, [data])
 
     return (
-        <div className="w-full flex items-start justify-between gap-[20px] mt-[60px]">
+        <div className="w-full flex flex-col xl:flex-row items-start justify-between gap-[20px] mt-[60px]">
             {/* <AppLogo style="h-[250px]" inverted={true} /> */}
             <div className="w-full flex flex-col gap-[5px] p-2 border border-1 border-[#b317a3] rounded-[20px]">
                 <div className="text-sm bg-gradient-to-bl from-[#430368] to-[#610259] rounded-tl-[10px] rounded-tr-[10px] text-left py-2 px-5">

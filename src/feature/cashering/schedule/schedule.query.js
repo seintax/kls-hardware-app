@@ -91,10 +91,10 @@ const balanceRecord = async (param, callback) => {
 }
 
 const startRecord = async (param, callback) => {
-    let { account, status, id } = table.schedule.fields
+    let { account, status, begshift, id } = table.schedule.fields
     let options = {
-        parameter: [param.id?.Exact(), "START"],
-        filter: [account?.Is(), status?.Is()],
+        parameter: [param.id?.Exact(), "START", param.date],
+        filter: [account?.Is(), status?.Is(), begshift?.DateFormat()?.Is()],
         order: [id?.Asc()]
     }
     // let sql = query.builder.rec(table.schedule, options.filter, options.order)
@@ -102,7 +102,7 @@ const startRecord = async (param, callback) => {
     //     if (err) return callback(err)
     //     return callback(null, ans)
     // })
-    let sql = query.optimize.rec(table.schedule, options.filter, options.order)
+    let sql = query.optimize.rec(table.schedule, options.filter, options.order, 1)
     my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
         return callback(null, query.mask(ans, sql.array))
