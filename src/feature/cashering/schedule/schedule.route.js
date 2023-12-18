@@ -90,7 +90,7 @@ router.get('/cashering/schedule/start', async (req, res) => {
         })
         return res.status(200).json({
             success: true,
-            result: ans.length > 1 ? ans[0] : {} || {},
+            result: ans.length > 0 ? ans[0] : {} || {},
         })
     })
 })
