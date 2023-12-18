@@ -71,14 +71,11 @@ const DashboardIndex = () => {
 
     useEffect(() => {
         const cred = JSON.parse(localStorage.getItem("cred"))
-        if (cred) setuser(cred)
-    }, [])
-
-    useEffect(() => {
-        if (user) {
+        if (cred) {
+            setuser(cred)
             const instantiateUser = async () => {
-                if (user?.id) {
-                    let res = await fetchShiftByStart(user.id, sqlDate())
+                if (cred?.id) {
+                    let res = await fetchShiftByStart(cred.id, sqlDate())
                     if (!res.success) {
                         handleNotification({
                             type: 'error',
@@ -107,7 +104,7 @@ const DashboardIndex = () => {
 
             instantiateUser()
         }
-    }, [user])
+    }, [])
 
     return (
         <div className="flex h-screen flex-col">

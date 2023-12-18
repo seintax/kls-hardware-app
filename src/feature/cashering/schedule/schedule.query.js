@@ -102,7 +102,7 @@ const startRecord = async (param, callback) => {
     //     if (err) return callback(err)
     //     return callback(null, ans)
     // })
-    let sql = query.optimize.rec(table.schedule, options.filter, options.order, 1)
+    let sql = query.optimize.rec(table.schedule, options.filter, options.order)
     my.query(sql.query, options.parameter, (err, ans) => {
         if (err) return callback(err)
         return callback(null, query.mask(ans, sql.array))
