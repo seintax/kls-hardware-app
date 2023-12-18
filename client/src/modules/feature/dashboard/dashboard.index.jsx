@@ -11,6 +11,7 @@ import React, { useEffect } from 'react'
 import { Outlet } from "react-router-dom"
 import { useClientContext } from "../../../utilities/context/client.context"
 import { useNotificationContext } from "../../../utilities/context/notification.context"
+import { sqlDate } from "../../../utilities/functions/datetime.functions"
 import AppBreadcrumbs from "../../../utilities/interface/application/aesthetics/app.breadcrumb"
 import AppSidebar from "../../../utilities/interface/application/navigation/app.sidebar"
 import { fetchShiftByStart } from "../cashering/cashering.service"
@@ -77,7 +78,7 @@ const DashboardIndex = () => {
         if (user) {
             const instantiateUser = async () => {
                 if (user?.id) {
-                    let res = await fetchShiftByStart(user.id)
+                    let res = await fetchShiftByStart(user.id, sqlDate())
                     if (!res.success) {
                         handleNotification({
                             type: 'error',

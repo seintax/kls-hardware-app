@@ -5,6 +5,7 @@ import {
 } from "@heroicons/react/24/outline"
 import { Fragment, useEffect, useState } from "react"
 import { NavLink, useNavigate } from "react-router-dom"
+import { version } from "../../../../../package.json"
 import { userNavigation } from "../../../../modules/feature/dashboard/dashboard.index.jsx"
 import AppLogo from "../aesthetics/app.logo.jsx"
 import AppNavigation from "./app.navigation.jsx"
@@ -110,6 +111,7 @@ export default function AppSideBar({ menulist }) {
                         </div>
                     )
                 ))}
+                <div className="absolute bottom-[2px] px-2 text-sm">v{version}</div>
             </nav>
         )
     }

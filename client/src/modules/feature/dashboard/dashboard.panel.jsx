@@ -18,7 +18,7 @@ const DashboardPanel = ({ id }) => {
     }, [location])
 
     return (
-        <div className="w-full h-full text-white bg-gradient-to-r from-[#1b0372] to-[#700474] flex flex-col items-start p-5">
+        <div className="w-full h-full overflow-y-auto text-white bg-gradient-to-r from-[#1b0372] to-[#700474] flex flex-col items-start p-5">
             <div className="w-full h-full flex flex-col bg-black bg-opacity-[40%] rounded-[30px] p-3 ">
                 <div className="absolute px-10 py-2 rounded-tl-[20px] rounded-br-[20px] bg-gradient-to-r from-[#1b0372] to-[#700474] border border-1 border-[#b317a3]">Welcome🎉🎉🎉&emsp;{user?.name}</div>
                 <DashboardCards data={data} />

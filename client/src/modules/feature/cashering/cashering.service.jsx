@@ -190,8 +190,8 @@ export const transferShift = async (data) => {
     return res.data
 }
 
-export const fetchShiftByStart = async (id) => {
-    const opt = { params: { id: id } }
+export const fetchShiftByStart = async (id, date) => {
+    const opt = { params: { id: id, date: date } }
     const res = await axios.get(`${BASE_URL}/custom/cashering/schedule/start`, opt)
     return res.data
 }

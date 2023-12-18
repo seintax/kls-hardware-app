@@ -1,5 +1,6 @@
 import moment from "moment"
 import React, { useEffect, useState } from 'react'
+import { sqlTimestamp } from "../../../utilities/functions/datetime.functions"
 import AppModal from "../../../utilities/interface/application/modalities/app.modal"
 import { createCollection, createRemittance, createShift, updateShift } from "./cashering.service"
 
@@ -53,10 +54,12 @@ const CasheringCashier = ({ show, toggle, user, shift, setshift, setstartcash, d
 
     const onSubmitShift = async (e) => {
         e.preventDefault()
+        let currentTime = new Date()
         if (shift === "CLOSE") {
             let param = {
                 account: user.id,
-                begcash: cash
+                begcash: cash,
+                begshift: sqlTimestamp(currentTime)
             }
             let res = await createShift(param)
             let sched = res?.result?.insertId
@@ -69,7 +72,7 @@ const CasheringCashier = ({ show, toggle, user, shift, setshift, setstartcash, d
                     shift: sched,
                     status: "START",
                     begcash: cash,
-                    begshift: new Date()
+                    begshift: currentTime
                 }))
                 toggle()
             }
@@ -79,7 +82,7 @@ const CasheringCashier = ({ show, toggle, user, shift, setshift, setstartcash, d
             let param = {
                 shift: {
                     account: user.id,
-                    endshift: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+                    endshift: moment(currentTime).format("YYYY-MM-DD HH:mm:ss"),
                     endcash: cash,
                     status: "CLOSE",
                     totalhrs: duration,
