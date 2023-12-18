@@ -83,3 +83,8 @@ String.prototype.Qoute = function () {
     return `'${base}'`
 }
 
+String.prototype.DateFormat = function (val = undefined) {
+    let base = (this === undefined ? "" : this.toString())
+    return `DATE(${base})`
+}
+
