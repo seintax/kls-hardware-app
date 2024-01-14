@@ -5,7 +5,7 @@ import DataError from "./data.error"
 import DataLoading from "./data.loading"
 import DataNoRecord from "./data.norecord"
 
-const DataIndex = ({ name, data, isLoading, isError, inputLink, setter, manage, children }) => {
+const DataIndex = ({ name, actions, data, isLoading, isError, inputLink, setter, manage, children }) => {
     const location = useLocation()
     const { handleTrail } = useClientContext()
 
@@ -41,10 +41,17 @@ const DataIndex = ({ name, data, isLoading, isError, inputLink, setter, manage, 
                 </div>
                 {
                     manage && (
-                        <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+                        <div className="flex flex-row-reverse gap-2 mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
                             <Link onClick={() => toggleAdd()} className="button-link">
                                 Add {name}
                             </Link>
+                            {
+                                (actions?.map((action, index) => (
+                                    <Link key={index} onClick={action?.callback} className={`${action?.hidden ? "hidden" : "button-link bg-blue-500 hover:bg-blue-600"}`}>
+                                        {action.label}
+                                    </Link>
+                                )))
+                            }
                         </div>
                     )
                 }
