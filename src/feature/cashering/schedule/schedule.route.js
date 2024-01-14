@@ -119,4 +119,42 @@ router.patch('/cashering/schedule/transfer', async (req, res) => {
     })
 })
 
+router.get('/cashering/schedule/logged', async (req, res) => {
+    let batch = await Promise.all([
+        new Promise(async (resolve, reject) => {
+            await service.loggedRecord(req.query, (err, ans) => {
+                if (err) reject({ status: "Error", error: err })
+                resolve({ status: "Success", data: ans })
+            })
+        }),
+        new Promise(async (resolve, reject) => {
+            await service.closedRecord(req.query, (err, ans) => {
+                if (err) reject({ status: "Error", error: err })
+                resolve({ status: "Success", data: ans })
+            })
+        })
+    ])
+    if (batch.filter(f => f.status === "Error")?.length) {
+        return res.status(200).json({
+            success: false, error: err
+        })
+    }
+    return res.status(200).json({
+        success: true,
+        result: [...batch[0].data, ...batch[1].data],
+    })
+})
+
+router.get('/cashering/schedule/closed', async (req, res) => {
+    await service.closedRecord(req.query, (err, ans) => {
+        if (err) return res.status(200).json({
+            success: false, error: err
+        })
+        return res.status(200).json({
+            success: true,
+            result: ans || {},
+        })
+    })
+})
+
 module.exports = router

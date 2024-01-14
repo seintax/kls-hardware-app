@@ -6,7 +6,7 @@ const Transactions = (props) => {
         trans,
         cart,
         action,
-        onindex
+        onindex,
     } = props
 
     const keydown = useCallback(e => {
