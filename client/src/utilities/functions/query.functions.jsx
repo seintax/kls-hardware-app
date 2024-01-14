@@ -37,3 +37,39 @@ export const processForm = (id, name, updateFunc, createFunc, queryKey, callBack
 
     return { mutate }
 }
+
+export const generateQuery = (dataArray) => {
+    if (dataArray?.length) {
+        return dataArray?.map((data) => {
+            let fields = []
+            let values = []
+            for (const prop in data) {
+                fields.push(prop)
+                values.push(data[prop].replaceAll("'", "\'"))
+            }
+            return {
+                ...data,
+                insertQuery: `INSERT INTO table_name (${fields.join(", ")}) VALUES ('${values.join("', '")}'); `
+            }
+        })
+    }
+}
+
+export const generateDynamicQuery = (dataArray, excluded = ["id"]) => {
+    if (dataArray?.length) {
+        return dataArray?.map((data) => {
+            let fields = []
+            let values = []
+            for (const prop in data) {
+                if (!excluded.includes(prop)) {
+                    fields.push(prop)
+                    values.push(data[prop].replaceAll("'", "''"))
+                }
+            }
+            return {
+                ...data,
+                insertQuery: `INSERT INTO table_name (${fields.join(", ")}) VALUES ('${values.join("', '")}'); `
+            }
+        })
+    }
+}

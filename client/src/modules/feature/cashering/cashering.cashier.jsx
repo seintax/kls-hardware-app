@@ -10,6 +10,7 @@ const CasheringCashier = ({ show, toggle, user, shift, setshift, setstartcash, d
     const [remittance, setremittance] = useState("")
     const [totalbills, settotalbills] = useState(0)
     const [totalvalue, settotalvalue] = useState(0)
+    const [loading, setloading] = useState(false)
     const [rcd, setrcd] = useState({
         php1k: "",
         php5h: "",
@@ -55,6 +56,7 @@ const CasheringCashier = ({ show, toggle, user, shift, setshift, setstartcash, d
     const onSubmitShift = async (e) => {
         e.preventDefault()
         let currentTime = new Date()
+        setloading(true)
         if (shift === "CLOSE") {
             let param = {
                 account: user.id,
@@ -74,6 +76,7 @@ const CasheringCashier = ({ show, toggle, user, shift, setshift, setstartcash, d
                     begcash: cash,
                     begshift: currentTime
                 }))
+                setloading(false)
                 toggle()
             }
             return
@@ -120,6 +123,7 @@ const CasheringCashier = ({ show, toggle, user, shift, setshift, setstartcash, d
                 setdrawercash("0.00")
                 setshiftno()
                 localStorage.removeItem("shift")
+                setloading(false)
                 toggle()
             }
             return
@@ -328,7 +332,7 @@ const CasheringCashier = ({ show, toggle, user, shift, setshift, setstartcash, d
                     ) : null
                 }
                 <div className="flex justify-center w-full mt-5">
-                    <button type="submit" className="button-link">
+                    <button type="submit" className="button-link" disabled={loading}>
                         {shift === "START" ? "End" : "Begin"} Shift
                     </button>
                 </div>
