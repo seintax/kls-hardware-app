@@ -202,6 +202,18 @@ export const fetchShiftByAccount = async (id) => {
     return res.data
 }
 
+export const fetchShiftByLogged = async (id) => {
+    const opt = { params: { id: id } }
+    const res = await axios.get(`${BASE_URL}/custom/cashering/schedule/logged`, opt)
+    return res.data
+}
+
+export const fetchShiftByClosed = async (id) => {
+    const opt = { params: { id: id } }
+    const res = await axios.get(`${BASE_URL}/custom/cashering/schedule/closed`, opt)
+    return res.data
+}
+
 export const createRemittance = async (data) => {
     const res = await axios.post(`${BASE_URL}/custom/cashering/remittance`, data)
     return res.data

@@ -4,6 +4,7 @@ import moment from "moment"
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom"
 import DevLogo from "../../../assets/logo.ico"
+import { useClientContext } from "../../../utilities/context/client.context"
 import { encryptToken } from "../../../utilities/functions/string.functions"
 import AppLogo from "../../../utilities/interface/application/aesthetics/app.logo"
 import { fetchShiftByStart } from "../../feature/cashering/cashering.service"
@@ -11,6 +12,7 @@ import { loginAccount } from "./account.services"
 
 const AccountLogin = () => {
     const navigate = useNavigate()
+    const { setuser } = useClientContext()
     const [error, seterror] = useState("")
     const [view, setview] = useState("password")
     const [login, setlogin] = useState({
@@ -34,12 +36,14 @@ const AccountLogin = () => {
         if (id) {
             let res = await fetchShiftByStart(id)
             if (res?.result?.id) {
-                localStorage.setItem("shift", JSON.stringify({
+                let userInfo = {
                     shift: res?.result?.id,
                     status: res?.result?.status,
                     begcash: res?.result?.begcash,
                     begshift: res?.result?.begshift
-                }))
+                }
+                setuser(userInfo)
+                localStorage.setItem("shift", JSON.stringify(userInfo))
             }
             else localStorage.removeItem("shift")
         }

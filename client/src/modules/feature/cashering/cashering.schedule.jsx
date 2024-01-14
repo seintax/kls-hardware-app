@@ -1,22 +1,22 @@
 import { XMarkIcon } from "@heroicons/react/20/solid"
-import moment from "moment"
 import React, { useEffect, useState } from 'react'
 import { useQuery, useQueryClient } from "react-query"
 import { useClientContext } from "../../../utilities/context/client.context"
 import { useNotificationContext } from "../../../utilities/context/notification.context"
 import { sortBy } from "../../../utilities/functions/array.functions"
+import { momentPST } from "../../../utilities/functions/datetime.functions"
 import { generateZeros } from "../../../utilities/functions/string.functions"
 import AppModal from "../../../utilities/interface/application/modalities/app.modal"
 import DataOperation from "../../../utilities/interface/datastack/data.operation"
 import DataRecords from "../../../utilities/interface/datastack/data.records"
 import NotificationDelete from "../../../utilities/interface/notification/notification.delete"
-import { deleteShift, fetchShiftByAccount, fetchTransactionBySchedule, updateShift } from "./cashering.service"
+import { deleteShift, fetchShiftByLogged, fetchTransactionBySchedule, updateShift } from "./cashering.service"
 
 const CasheringSchedule = ({ show, toggle }) => {
     const { user, cache, setcache } = useClientContext()
     const { handleNotification } = useNotificationContext()
     const name = "schedule-index"
-    const { data, isLoading, isError, refetch } = useQuery(name, () => fetchShiftByAccount(user.id))
+    const { data, isLoading, isError, refetch } = useQuery(name, () => fetchShiftByLogged(user.id))
     const queryClient = useQueryClient()
     const [records, setrecords] = useState()
     const [currentRecord, setCurrentRecord] = useState()
@@ -30,8 +30,8 @@ const CasheringSchedule = ({ show, toggle }) => {
         style: '',
         items: [
             { name: 'Shift Code', stack: false, sort: 'id' },
-            { name: 'Start', stack: true, sort: 'begstart', size: 200 },
-            { name: 'Status', stack: true, sort: 'status', size: 150 },
+            { name: 'Start', stack: true, sort: 'begstart', size: 300 },
+            { name: 'Status', stack: true, sort: 'status', size: 120 },
             { name: '', stack: false, screenreader: 'Action', size: 100 },
         ]
     }
@@ -189,7 +189,7 @@ const CasheringSchedule = ({ show, toggle }) => {
     const items = (item, cache) => {
         return [
             { value: generateZeros(item.id, 5) },
-            { value: moment(item.begshift).format("MM-DD-YYYY HH:mm:ss") },
+            { value: momentPST(item.begshift, "MMMM DD, YYYY HH:mm A") },
             { value: item.status },
             { value: <DataOperation actions={actions(item, cache)} /> }
         ]

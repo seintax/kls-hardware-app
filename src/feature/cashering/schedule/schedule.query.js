@@ -232,6 +232,35 @@ const transferRecord = async (param, callback) => {
     return callback(null, { errors: error, data: batch })
 }
 
+const loggedRecord = async (param, callback) => {
+    let { account, status, id } = table.schedule.fields
+    let options = {
+        parameter: [param.id?.Exact(), "START"],
+        filter: [account?.Is(), status?.Is()],
+        order: [id?.Desc()]
+    }
+    let sql = query.optimize.rec(table.schedule, options.filter, options.order)
+    my.query(sql.query, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, query.mask(ans, sql.array))
+    })
+}
+
+const closedRecord = async (param, callback) => {
+    let { account, status, id } = table.schedule.fields
+    let options = {
+        parameter: [param.id?.Exact(), "CLOSE"],
+        filter: [account?.Is(), status?.Is()],
+        order: [id?.Desc()],
+        limit: 15
+    }
+    let sql = query.optimize.rec(table.schedule, options.filter, options.order, options.limit)
+    my.query(sql.query, options.parameter, (err, ans) => {
+        if (err) return callback(err)
+        return callback(null, query.mask(ans, sql.array))
+    })
+}
+
 module.exports = {
     createRecord,
     updateRecord,
@@ -242,5 +271,7 @@ module.exports = {
     balanceRecord,
     startRecord,
     accountRecord,
-    transferRecord
+    transferRecord,
+    loggedRecord,
+    closedRecord,
 }
