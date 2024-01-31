@@ -209,10 +209,10 @@ const union = (array, base, order, limit) => {
         data?.options?.parameter?.map(param => {
             parameters.push(param)
         })
-        return `SELECT ${compare(base, data?.fields)} FROM ${data?.name} WHERE ${data?.options?.filter.join(" AND ")}`
+        return `(SELECT ${compare(base, data?.fields)} FROM ${data?.name} WHERE ${data?.options?.filter.join(" AND ")}${order ? ` ORDER BY ${order.join(", ")}` : ""})`
     })
     return {
-        query: `${sql.join(" UNION ")}${order ? ` ORDER BY ${order.join(", ")}` : ""}${limit ? ` LIMIT ${limit}` : ""}`,
+        query: `${sql.join(" UNION ")}${limit ? ` LIMIT ${limit}` : ""}`,
         parameter: parameters
     }
 }
