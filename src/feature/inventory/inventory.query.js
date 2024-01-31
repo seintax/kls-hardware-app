@@ -147,7 +147,14 @@ const availableRecord = async (param, callback) => {
     let union = query.builder.union([inv, cnv], table.inventory.product, ["name".Asc(), "details".Asc(), "drdate".Asc()])
     my.query(union.query, union.parameter, (err, ans) => {
         if (err) return callback(err)
-        return callback(null, ans)
+        let sorted = ans?.sort((a, b) => {
+            var byName = a.name.localeCompare(b.name)
+            var byDetails = a.details.localeCompare(b.details)
+            var byDrDate = new Date(a.drdate) - new Date(b.drdate)
+            var byPrice = parseFloat(b.price) - parseFloat(a.price)
+            return byName || byDetails || byDrDate
+        })
+        return callback(null, sorted)
     })
 }
 
