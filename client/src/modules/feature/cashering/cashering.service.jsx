@@ -71,6 +71,18 @@ export const fetchDispensingByInventory = async (item) => {
     return res.data
 }
 
+export const fetchDispensingByProductItem = async (product) => {
+    const opt = { params: { product: product } }
+    const res = await axios.get(`${BASE_URL}/custom/cashering/dispensing/productitem`, opt)
+    return res.data
+}
+
+export const fetchDispensingByProductConv = async (product) => {
+    const opt = { params: { product: product } }
+    const res = await axios.get(`${BASE_URL}/custom/cashering/dispensing/productconv`, opt)
+    return res.data
+}
+
 export const migratePayment = async (data) => {
     const res = await axios.post(`${BASE_URL}/custom/cashering/payment/migrate`, data)
     return res.data
@@ -160,6 +172,12 @@ export const batchReturn = async (data) => {
 export const fetchReturnByInventory = async (item) => {
     const opt = { params: { item: item } }
     const res = await axios.get(`${BASE_URL}/custom/cashering/returned/inventory`, opt)
+    return res.data
+}
+
+export const fetchReturnByProduct = async (product) => {
+    const opt = { params: { product: product } }
+    const res = await axios.get(`${BASE_URL}/custom/cashering/returned/product`, opt)
     return res.data
 }
 

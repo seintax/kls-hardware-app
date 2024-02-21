@@ -91,6 +91,22 @@ const alias = (table) => {
     return names.join(", ")
 }
 
+const groupby = (fields) => {
+    let aliases = {}
+    fields.forEach((field) => {
+        const alias = field.split(" AS ")
+        const name = alias[1]
+        aliases = {
+            ...aliases,
+            [name]: name
+        }
+    })
+    return {
+        field: fields?.join(", "),
+        array: aliases
+    }
+}
+
 const fields = (table) => {
     let names = {}
     for (const prop in table.fields) {
@@ -149,6 +165,23 @@ const rec_ = (table, filter, order, limit) => {
     return {
         query: `SELECT * FROM ${table.name}${condition} WHERE ${filter?.filter(f => f !== undefined)?.join(" AND ")}${order ? ` ORDER BY ${order.join(", ")}` : ""}${limit ? ` LIMIT ${limit}` : ""}`,
         array: fields(table)
+    }
+}
+
+const qty_ = (table, filter, order, limit) => {
+    let condition = table?.conditional ? ` ${table?.conditional}` : ""
+    return {
+        query: `SELECT COUNT(*) AS qty FROM ${table.name}${condition} WHERE ${filter?.filter(f => f !== undefined)?.join(" AND ")}${order ? ` ORDER BY ${order.join(", ")}` : ""}${limit ? ` LIMIT ${limit}` : ""}`,
+        array: { qty: 'qty' }
+    }
+}
+
+const grp_ = (fields, table, filter, group, order, limit) => {
+    let condition = table?.conditional ? ` ${table?.conditional}` : ""
+    const grouped = groupby(fields)
+    return {
+        query: `SELECT ${grouped.field} FROM ${table.name}${condition} WHERE ${filter?.filter(f => f !== undefined)?.join(" AND ")}${group ? ` GROUP BY ${group.join(", ")}` : ""}${order ? ` ORDER BY ${order.join(", ")}` : ""}${limit ? ` LIMIT ${limit}` : ""}`,
+        array: grouped.array
     }
 }
 
@@ -235,6 +268,8 @@ const optimize = {
     rec: rec_,
     get: get_,
     src: src_,
+    qty: qty_,
+    grp: grp_,
 }
 
 module.exports = {
