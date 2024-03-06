@@ -22,6 +22,7 @@ const PrintDailySummary = () => {
             { name: <span>Cheque</span>, stack: true, sort: 'credit_cheque', size: 250, position: "text-center" },
             { name: <span>GCash</span>, stack: true, sort: 'credit_gcash', size: 250, position: "text-center" },
             { name: <span className="font-bold">Total Collected</span>, stack: true, size: 210, position: "text-center" },
+            { name: <span>Returned</span>, stack: true, sort: 'returned', size: 250, position: "text-center" },
         ]
     }
 
@@ -67,6 +68,7 @@ const PrintDailySummary = () => {
                 <td colSpan={2} className=" py-3 border border-1 border-gray-300"></td>
                 <td colSpan={5} className="text-center py-3 border border-1 border-gray-300">SALES</td>
                 <td colSpan={4} className="text-center py-3 border border-1 border-gray-300">COLLECTION</td>
+                <td colSpan={1} className=" py-3 border border-1 border-gray-300"></td>
             </tr>
         )
     }

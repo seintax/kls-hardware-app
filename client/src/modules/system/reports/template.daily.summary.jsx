@@ -1,7 +1,10 @@
 import { PrinterIcon } from "@heroicons/react/20/solid"
+import { ArchiveBoxArrowDownIcon } from "@heroicons/react/24/outline"
 import { FunnelIcon } from "@heroicons/react/24/solid"
+import { saveAs } from 'file-saver'
 import moment from "moment"
 import React, { useEffect, useState } from 'react'
+import * as XLSX from 'xlsx'
 import { useClientContext } from "../../../utilities/context/client.context"
 import { sortBy } from "../../../utilities/functions/array.functions"
 import { amount, currencyFormat } from "../../../utilities/functions/number.funtions"
@@ -25,15 +28,16 @@ const TemplateDailySummary = ({ report, toggle }) => {
         style: '',
         items: [
             { name: 'Date', stack: false, sort: 'date' },
-            { name: <span>Sales Cash <br />Collection</span>, stack: true, sort: 'sales_cash', size: 210 },
-            { name: <span>Sales Cheque <br />Collection</span>, stack: true, sort: 'sales_cheque', size: 210 },
-            { name: <span>Sales GCash <br />Collection</span>, stack: true, sort: 'sales_gcash', size: 210 },
-            { name: <span>Sales Credit <br />Collection</span>, stack: true, sort: 'sales_credit', size: 210 },
-            { name: <span className="font-bold">Total Sales <br />Collection</span>, stack: true, size: 210 },
-            { name: <span>Credit Cash <br />Collection</span>, stack: true, sort: 'credit_cash', size: 210 },
-            { name: <span>Credit Cheque <br />Collection</span>, stack: true, sort: 'credit_cheque', size: 210 },
-            { name: <span>Credit GCash <br />Collection</span>, stack: true, sort: 'credit_gcash', size: 210 },
-            { name: <span className="font-bold">Total Collection <br />Collection</span>, stack: true, size: 210 },
+            { name: <span>Sales Cash <br />Collection</span>, stack: true, sort: 'sales_cash', size: 160 },
+            { name: <span>Sales Cheque <br />Collection</span>, stack: true, sort: 'sales_cheque', size: 160 },
+            { name: <span>Sales GCash <br />Collection</span>, stack: true, sort: 'sales_gcash', size: 160 },
+            { name: <span>Sales Credit <br />Collection</span>, stack: true, sort: 'sales_credit', size: 160 },
+            { name: <span className="font-bold">Total Sales <br />Collection</span>, stack: true, size: 160 },
+            { name: <span>Credit Cash <br />Collection</span>, stack: true, sort: 'credit_cash', size: 160 },
+            { name: <span>Credit Cheque <br />Collection</span>, stack: true, sort: 'credit_cheque', size: 160 },
+            { name: <span>Credit GCash <br />Collection</span>, stack: true, sort: 'credit_gcash', size: 160 },
+            { name: <span className="font-bold">Total Collection <br />Collection</span>, stack: true, size: 160 },
+            { name: <span>Returned</span>, stack: true, sort: 'returned', size: 160 },
         ]
     }
 
@@ -49,6 +53,7 @@ const TemplateDailySummary = ({ report, toggle }) => {
             { value: currencyFormat.format(item.credit_cheque) },
             { value: currencyFormat.format(item.credit_gcash) },
             { value: <b>{currencyFormat.format(amount(item.credit_cash) + amount(item.credit_cheque) + amount(item.credit_gcash))}</b> },
+            { value: currencyFormat.format(item.returned) },
         ]
     }
 
@@ -64,6 +69,7 @@ const TemplateDailySummary = ({ report, toggle }) => {
             { value: currencyFormat.format(item.credit_cheque) },
             { value: currencyFormat.format(item.credit_gcash) },
             { value: currencyFormat.format(amount(item.credit_cash) + amount(item.credit_cheque) + amount(item.credit_gcash)) },
+            { value: currencyFormat.format(item.returned) },
         ]
     }
 
@@ -81,6 +87,7 @@ const TemplateDailySummary = ({ report, toggle }) => {
                 { value: currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.credit_cheque || 0), 0)) },
                 { value: currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.credit_gcash || 0), 0)) },
                 { value: currencyFormat.format(data?.reduce((prev, curr) => prev + (amount(curr.credit_cash) + amount(curr.credit_cheque) + amount(curr.credit_gcash)), 0) || 0) },
+                { value: currencyFormat.format(data?.reduce((prev, curr) => prev + amount(curr.returned || 0), 0)) },
             ]
         }
     }
@@ -130,6 +137,17 @@ const TemplateDailySummary = ({ report, toggle }) => {
         window.open(`/#/print/${report}/${moment(filter.fr).format("MMDDYYYY")}${moment(filter.to).format("MMDDYYYY")}`, '_blank')
     }
 
+    const exportData = () => {
+        if (data?.length) {
+            let type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+            const ws = XLSX.utils.json_to_sheet([...data])
+            const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] }
+            const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+            const excelData = new Blob([excelBuffer], { type: type })
+            saveAs(excelData, `${report?.toLowerCase()?.replaceAll("-", "_")}_exported_on_${moment(new Date()).format('YYYY_MM_DD_HH_mm_ss')}.xlsx`)
+        }
+    }
+
     useEffect(() => {
         return () => {
             localStorage.removeItem(report)
@@ -172,8 +190,12 @@ const TemplateDailySummary = ({ report, toggle }) => {
                                 className="h-8 w-8 text-gray-700 hover:text-gray-500 cursor-pointer"
                             />
                         </button>
+                        <ArchiveBoxArrowDownIcon
+                            className="h-8 w-8 text-gray-700 hover:text-gray-500 cursor-pointer ml-auto mr-3"
+                            onClick={() => exportData()}
+                        />
                         <PrinterIcon
-                            className="h-8 w-8 text-gray-700 hover:text-gray-500 cursor-pointer ml-auto"
+                            className="h-8 w-8 text-gray-700 hover:text-gray-500 cursor-pointer"
                             onClick={() => printData()}
                         />
                     </div>
