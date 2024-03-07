@@ -61,7 +61,7 @@ const reports = {
                     pos_return_transaction
                 GROUP BY DATE(rtrn_time)) a
                     ON rtrn_date=paym_date
-        GROUP BY paym_date
+        GROUP BY paym_date,returned
         ORDER BY paym_date DESC;
         `,
     dailyReceivables: `
