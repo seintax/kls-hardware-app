@@ -49,7 +49,7 @@ const reports = {
             SUM(IF(paym_method='CASH' AND paym_type='CREDIT', paym_amount, 0)) AS credit_cash,
             SUM(IF(paym_method='CHEQUE' AND paym_type='CREDIT', paym_amount, 0)) AS credit_cheque, 
             SUM(IF(paym_method='GCASH' AND paym_type='CREDIT', paym_amount, 0)) AS credit_gcash,
-            returned  
+            returned 
         FROM
             (SELECT *,DATE(paym_time) AS paym_date FROM pos_payment_collection WHERE
             paym_time BETWEEN '@fr 00:00:01' AND '@to 23:59:59') arg
