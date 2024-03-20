@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const service = require('./cloud.query')
-const cloud = require('../../../data/connection/hostinger')
+const cloud = require('../../../data/connection/hosting')
 
 router.get('/cloud/tables', async (req, res) => {
     await service.showTables(req.query, (err, ans) => {
