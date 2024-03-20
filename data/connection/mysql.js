@@ -14,10 +14,10 @@ const mysql = require('mysql')
 // development environment
 // var my = mysql.createPool('mysql://ql4nryngt7llnxn6c2gq:pscale_pw_xhSDbUrfZUh1lFznu8jyaW18pvuYR8BrQ0cuOEssIag@aws.connect.psdb.cloud/app-jbs-hpos?ssl={"rejectUnauthorized":true}')
 
-// production environment
+// production environment: planetscale
 // var my = mysql.createPool('mysql://e0wmy46upo7a2d3rdh61:pscale_pw_Wtyj2B8FXVu1JpZapP6zXrfL1wS4VFMsTgXeKDHbAkD@aws.connect.psdb.cloud/app-jbs-hpos?ssl={"rejectUnauthorized":true}')
 
-// production environment
+// production environment: hostinger-mysql
 var my = mysql.createPool({
     host: "151.106.124.151",
     user: "u480442611_main_root",
