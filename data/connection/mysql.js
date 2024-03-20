@@ -15,7 +15,19 @@ const mysql = require('mysql')
 // var my = mysql.createPool('mysql://ql4nryngt7llnxn6c2gq:pscale_pw_xhSDbUrfZUh1lFznu8jyaW18pvuYR8BrQ0cuOEssIag@aws.connect.psdb.cloud/app-jbs-hpos?ssl={"rejectUnauthorized":true}')
 
 // production environment
-var my = mysql.createPool('mysql://e0wmy46upo7a2d3rdh61:pscale_pw_Wtyj2B8FXVu1JpZapP6zXrfL1wS4VFMsTgXeKDHbAkD@aws.connect.psdb.cloud/app-jbs-hpos?ssl={"rejectUnauthorized":true}')
+// var my = mysql.createPool('mysql://e0wmy46upo7a2d3rdh61:pscale_pw_Wtyj2B8FXVu1JpZapP6zXrfL1wS4VFMsTgXeKDHbAkD@aws.connect.psdb.cloud/app-jbs-hpos?ssl={"rejectUnauthorized":true}')
+
+// production environment
+var my = mysql.createPool({
+    host: "151.106.124.151",
+    user: "u480442611_main_root",
+    password: "@JBSh@rdw@re2023",
+    database: "u480442611_jbs_app_1",
+    waitForConnections: true,
+    multipleStatements: true,
+    connectionLimit: 10,
+    queueLimit: 0
+})
 
 my.getConnection((err, con) => {
     if (err) {
