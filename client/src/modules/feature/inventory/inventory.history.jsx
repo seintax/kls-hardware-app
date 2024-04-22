@@ -101,6 +101,9 @@ const InventoryHistory = () => {
                     >
                         Back to Previous List
                     </Link>
+                    <span className="font-semibold text-xl">
+                        REF: {data?.id}
+                    </span>
                 </div>
             </div>
             <div className="flex flex-col no-select">
