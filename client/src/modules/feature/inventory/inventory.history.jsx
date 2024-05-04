@@ -162,6 +162,7 @@ const InventoryHistory = () => {
                 <div className="w-full pl-3 py-2">Item Code</div>
                 <div className="w-full pl-0 py-2">Transaction</div>
                 <div className="w-full pl-3 py-2">Quantity</div>
+                <div className="w-full pl-3 py-2">Details</div>
             </div>
             <div className="flex flex-col justify-between shadow ring-1 ring-black ring-opacity-5 md:mx-0 md:rounded-t-lg grow overflow-y-scroll">
                 <div className="h-full">
@@ -177,6 +178,7 @@ const InventoryHistory = () => {
                                 <div className="w-full pl-3 py-2">{`D-${generateZeros(d.item, 6)}-${generateZeros(d.id, 8)}`}</div>
                                 <div className="w-full pl-3 py-2">{d.code}</div>
                                 <div className="w-full pl-10 py-2">{d.dispense}</div>
+                                <div className="w-full pl-10 py-2"></div>
                             </div>
                         ))
                     }
@@ -188,6 +190,7 @@ const InventoryHistory = () => {
                                 {totdisp}
                             </div>
                         </div>
+                        <div className="w-full pl-10 py-2"></div>
                     </div>
                     <div className="flex items-center mt-2">
                         <div className="w-full pl-3 py-2 font-bold">Converted: {conv?.length ? "" : <span className="font-normal">No items converted.</span>}</div>
@@ -201,6 +204,7 @@ const InventoryHistory = () => {
                                 <div className="w-full pl-3 py-2">{`C-${generateZeros(c.item, 6)}-${generateZeros(c.id, 8)}`}</div>
                                 <div className="w-full pl-3 py-2">{moment(c.time).format("YYYY-MM-DD hh:mm:ss A")}</div>
                                 <div className="w-full pl-10 py-2">{c.itemqty}</div>
+                                <div className="w-full pl-10 py-2"></div>
                             </div>
                         ))
                     }
@@ -212,6 +216,7 @@ const InventoryHistory = () => {
                                 {totconv}
                             </div>
                         </div>
+                        <div className="w-full pl-10 py-2"></div>
                     </div>
                     <div className="flex items-center mt-2">
                         <div className="w-full pl-3 py-2 font-bold">Transferred: {trni?.length ? "" : <span className="font-normal">No items transferred.</span>}</div>
@@ -225,6 +230,7 @@ const InventoryHistory = () => {
                                 <div className="w-full pl-3 py-2">{`T-${generateZeros(t.item, 6)}-${generateZeros(t.id, 8)}`}</div>
                                 <div className="w-full pl-3 py-2">{moment(t.time).format("YYYY-MM-DD hh:mm:ss A")}</div>
                                 <div className="w-full pl-10 py-2">{t.qty}</div>
+                                <div className="w-full pl-10 py-2"></div>
                             </div>
                         ))
                     }
@@ -236,6 +242,7 @@ const InventoryHistory = () => {
                                 {tottrni}
                             </div>
                         </div>
+                        <div className="w-full pl-10 py-2"></div>
                     </div>
                     <div className="flex items-center mt-2">
                         <div className="w-full pl-3 py-2 font-bold">Returned: {rtrn?.length ? "" : <span className="font-normal">No items returned.</span>}</div>
@@ -246,6 +253,7 @@ const InventoryHistory = () => {
                                 <div className="w-full pl-3 py-2">{`R-${generateZeros(r.item, 6)}-${generateZeros(r.id, 8)}`}</div>
                                 <div className="w-full pl-3 py-2">{moment(r.time).format("YYYY-MM-DD hh:mm:ss A")}</div>
                                 <div className="w-full pl-10 py-2">{r.qty}</div>
+                                <div className="w-full pl-10 py-2"></div>
                             </div>
                         ))
                     }
@@ -257,6 +265,7 @@ const InventoryHistory = () => {
                                 {totrtrn}
                             </div>
                         </div>
+                        <div className="w-full pl-10 py-2"></div>
                     </div>
                     <div className="flex items-center mt-2">
                         <div className="w-full pl-3 py-2 font-bold">Adjusted: {adjm?.length ? "" : <span className="font-normal">No items adjusted.</span>}</div>
@@ -266,11 +275,16 @@ const InventoryHistory = () => {
                             <div key={`D-${r.item}-${r.id}`} className="flex items-center hover:bg-yellow-200">
                                 <div className="w-full pl-3 py-2">{`A-${generateZeros(r.item, 6)}-${generateZeros(r.id, 8)}`}</div>
                                 <div className="w-full pl-3 py-2">{moment(r.time).format("YYYY-MM-DD hh:mm:ss A")}</div>
-                                <div className="w-full pl-10 py-2">{r.quantity}</div>
+                                <div className="w-full pl-10 py-2">
+                                    {r.operator === "Plus" ? "+" : "-"}{r.quantity}
+                                </div>
+                                <div className="w-full pl-10 py-2 text-xs">
+                                    {r.details}
+                                </div>
                             </div>
                         ))
                     }
-                    <div className={`flex items-center ${totadjm > 0 ? "" : "hidden"}`}>
+                    <div className={`flex items-center ${adjm?.length ? "" : "hidden"}`}>
                         <div className="w-full pl-3 py-2"></div>
                         <div className="w-full pl-3 py-2 text-right font-bold">Total</div>
                         <div className="w-full pl-5">
@@ -278,6 +292,7 @@ const InventoryHistory = () => {
                                 {totadjm}
                             </div>
                         </div>
+                        <div className="w-full pl-10 py-2"></div>
                     </div>
                 </div>
             </div>
