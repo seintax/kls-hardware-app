@@ -175,10 +175,9 @@ const InventoryAdjust = ({ reference, show, setshow }) => {
             }
         }
 
-        queryClient.invalidateQueries(`inventory-index`)
         mutate(param.adjustment)
-        // let res = await updateInventory(param.inventory)
         let res = await adjustInventory(reference.id, data.quantity, data?.operation === "Plus" ? "add" : "minus")
+        queryClient.invalidateQueries(`inventory-index`)
         if (res.success) {
             setshow(false)
         }

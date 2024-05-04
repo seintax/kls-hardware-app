@@ -198,13 +198,13 @@ const inventory = {
     adjustmentAdded: `
         UPDATE pos_stock_inventory SET 
             invt_stocks=(invt_stocks + @qty),
-            invt_plus_adjmt=(SELECT IFNULL(SUM(adjt_quantity),0) FROM pos_stock_adjustment WHERE adjt_item=invt_id AND adjt_operator='Plus')
+            invt_plus_adjmt=(invt_plus_adjmt + @qty)
         WHERE invt_id = ?
         `,
     adjustmentMinus: `
         UPDATE pos_stock_inventory SET 
             invt_stocks=(invt_stocks - @qty),
-            invt_mnus_adjmt=(SELECT IFNULL(SUM(adjt_quantity),0) FROM pos_stock_adjustment WHERE adjt_item=invt_id AND adjt_operator='Minus')
+            invt_mnus_adjmt=(invt_mnus_adjmt + @qty)
         WHERE invt_id = ?
         `,
 }
