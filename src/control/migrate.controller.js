@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const cl = require('../../data/connection/cloud')
-const br = require('../../data/connection/branch')
+// const br = require('../../data/connection/branch')
 
 router.post('/upload', async (req, res) => {
     let data = req.body?.data?.split("{_}")
@@ -20,16 +20,16 @@ router.post('/upload', async (req, res) => {
     })
 })
 
-router.get('/download', async (req, res) => {
-    await br.query(req.query?.sql, async (err, ans) => {
-        if (err) return res.status(200).json({ success: false, error: err })
-        return res.status(200).json({
-            success: true,
-            message: `Data request calls have retrieved ${ans.length} record/s.`,
-            response: ans
-        })
-    })
-    return res.status(401)
-})
+// router.get('/download', async (req, res) => {
+//     await br.query(req.query?.sql, async (err, ans) => {
+//         if (err) return res.status(200).json({ success: false, error: err })
+//         return res.status(200).json({
+//             success: true,
+//             message: `Data request calls have retrieved ${ans.length} record/s.`,
+//             response: ans
+//         })
+//     })
+//     return res.status(401)
+// })
 
 module.exports = router
