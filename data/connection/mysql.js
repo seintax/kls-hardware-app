@@ -19,7 +19,7 @@ const mysql = require('mysql')
 
 // production environment: hostinger-mysql
 var my = mysql.createPool({
-    host: "151.106.124.151",
+    host: "srv547.hstgr.io",
     user: "u480442611_main_root",
     password: "@JBSh@rdw@re2023",
     database: "u480442611_jbs_app_1",
@@ -31,7 +31,7 @@ var my = mysql.createPool({
 
 my.getConnection((err, con) => {
     if (err) {
-        console.log(`\x1b[41m`, `ERROR`, '\x1b[0m', `Failed to load server @ ${process.env.MY_SERVER}/${process.env.MY_DATABASE}`)
+        console.log(`\x1b[41m`, `ERROR`, '\x1b[0m', `Failed to load server @ hostinger/db.io`)
         if (err.code === 'PROTOCOL_CONNECTION_LOST') {
             console.error(`\x1b[41m`, `ERROR`, '\x1b[0m', 'PROTOCOL_CONNECTION_LOST: Database connection was closed.\n')
         }
