@@ -1,6 +1,6 @@
 const mysql = require('mysql')
 
-var br = mysql.createPool('mysql://ql4nryngt7llnxn6c2gq:pscale_pw_xhSDbUrfZUh1lFznu8jyaW18pvuYR8BrQ0cuOEssIag@aws.connect.psdb.cloud/app-jbs-hpos?ssl={"rejectUnauthorized":true}')
+var br = mysql.createPool('')
 
 br.getConnection((err, con) => {
     if (err) {
