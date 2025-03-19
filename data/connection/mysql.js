@@ -1,6 +1,6 @@
 const mysql = require('mysql')
 
-// production environment: hostinger-mysql
+// production environment
 var my = mysql.createPool({
     host: "srv547.hstgr.io",
     user: "u480442611_main_root",
