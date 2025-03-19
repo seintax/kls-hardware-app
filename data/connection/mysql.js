@@ -29,7 +29,7 @@ my.getConnection((err, con) => {
         }
     }
     else {
-        console.log(`\x1b[45m`, `MYSQL`, '\x1b[0m', `@ ${process.env.MY_SERVER}/${process.env.MY_DATABASE}\n`)
+        console.log(`\x1b[45m`, `MYSQL`, '\x1b[0m', `@ hostinger/db.io\n`)
     }
     if (con) con.release()
     return
