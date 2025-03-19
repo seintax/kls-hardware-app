@@ -20,6 +20,7 @@ cl.getConnection((err, con) => {
     }
     else {
         console.log(`\x1b[43m`, `CLOUD`, '\x1b[0m', `@ planetscale/app-jbs-hpos\n`)
+        console.log(`\x1b[43m`, `CLOUD`, '\x1b[0m', `@ planetscale/app-jbs-hpos\n`)
     }
     if (con) con.release()
     return
